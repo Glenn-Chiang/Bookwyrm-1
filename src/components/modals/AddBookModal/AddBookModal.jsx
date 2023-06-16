@@ -7,16 +7,19 @@ import InfoButton from '../../InfoButton/InfoButton';
 import { useState } from 'react';
 
 export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }) {
-  const [status, setStatus] = useState('Read');
+  const [status, setStatus] = useState('read');
 
   // Rating options
   const options = Array.from({ length: 10 }, (_, index) => (
     <option key={index} value={10 - index}>{10 - index}</option>
   ));
 
-  const handleSubmit = event => {
+  const handleSubmit = event => { // Confirm add book to myBooks
     event.preventDefault();
-
+    const myBooks = JSON.parse(localStorage.getItem('myBooks'));
+    myBooks[status].push(volume);
+    localStorage.setItem('myBooks', JSON.stringify(myBooks));
+    alert(`${volume.title} by ${volume.author} has been added to your '${status}' shelf!`);
   }
 
   return (
@@ -46,22 +49,22 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
           <fieldset className={styles.status}>
             <legend>Status</legend>
             <label>
-              <input type='radio' name='status' checked={status === 'Read'} onChange={() => setStatus('Read')}/>
+              <input type='radio' name='status' checked={status === 'read'} onChange={() => setStatus('read')}/>
               Read
               <FontAwesomeIcon icon={faCheckCircle}/>
             </label>
             <label>
-              <input type='radio' name='status' onChange={() => setStatus('Reading')}/>
+              <input type='radio' name='status' onChange={() => setStatus('reading')}/>
               Reading
               <FontAwesomeIcon icon={faBookBookmark}/>
             </label>
             <label>
-              <input type='radio' name='status' onChange={() => setStatus('To-Read')}/>
+              <input type='radio' name='status' onChange={() => setStatus('to-read')}/>
               To-Read
               <FontAwesomeIcon icon={faCalendarPlus}/>
             </label>
           </fieldset>
-          {status === 'Read' &&
+          {status === 'read' &&
             <label className={styles.rating}>
               Rating
               <FontAwesomeIcon icon={faStar}/>

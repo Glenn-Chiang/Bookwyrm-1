@@ -197,8 +197,7 @@ export default function Home() {
 
   return (
     <>
-      <Banner />
-      <Navbar/>
+      
       <SearchForm setSearchResults={setSearchResults} searchType={searchType} setSearchType={setSearchType} startIndex={startIndex} setStartIndex={setStartIndex} maxResults={maxResults}/>
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
       <ResultsList results={searchResults} setSelectedInfo={setSelectedInfo} setSelectedAdd={setSelectedAdd}/>
