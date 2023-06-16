@@ -9,17 +9,16 @@ import AddBookModal from "../../components/modals/AddBookModal/AddBookModal";
 
 import styles from './home.module.css'
 import { useEffect, useState } from 'react'
-import titlecase from '../../utility/titlecase'
 
 async function fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder) {
   try {
     let response;
 
-    if (searchType === 'Title') {
+    if (searchType === 'title') {
       response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=intitle:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}&orderBy=${sortOrder}`
       );
-    } else {
+    } else if (searchType === 'author') {
       response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=inauthor:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}`
       );
@@ -64,7 +63,7 @@ function getVolumes(results) {
 
 
 function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults }) {
-  const [searchType, setSearchType] = useState('Title');
+  const [searchType, setSearchType] = useState('title');
   const [sortOrder, setSortOrder] = useState('relevance');
 
   const [searchTerms, setSearchTerms] = useState(''); // Will update ONLY when search button is clicked. Therefore, even if we change the input value, the app will still 'remember' the last search term
@@ -122,25 +121,28 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
 
   return (
     <form className={styles['search-form']} onSubmit={handleSearch}>
-      <div className={styles.searchFor}>
-        Search for a Book by
-        <select onChange={handleSearchTypeChange}>
-          <option value='Title'>Title</option>
-          <option value='Author'>Author</option>
-        </select>
-      </div>
+      <h2>Search for a Book</h2>
       <div>
         <div></div>
         <input id='search-bar' className={styles.searchbar} onChange={handleInputChange}></input>
         <button className={styles.searchBtn} type='submit'>Search</button>
       </div>
       <p className={searchTerms ? styles.show : styles.hide}>{`Showing results for: "${searchTerms}"`}</p>
-      <div className={styles.sortBy}>
-        Sort results by
-        <select onChange={handleSortOrderChange}>
-          <option value='relevance'>Relevance</option>
-          <option value='newest'>Newest</option>
-        </select>
+      <div className={styles.searchParams}>
+        <div className={styles.searchFor}>
+          Search by
+          <select onChange={handleSearchTypeChange}>
+            <option value='title'>Title</option>
+            <option value='author'>Author</option>
+          </select>
+        </div>
+        <div className={styles.sortBy}>
+          Sort results by
+          <select onChange={handleSortOrderChange}>
+            <option value='relevance'>Relevance</option>
+            <option value='newest'>Newest</option>
+          </select>
+        </div>
       </div>
     </form>
   )

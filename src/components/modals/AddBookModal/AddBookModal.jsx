@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faCirclePlus, faClose, faStar } from '@fortawesome/free-solid-svg-icons';
 import InfoButton from '../../InfoButton/InfoButton';
 import { useState } from 'react';
+import titlecase from '../../../utility/titlecase'
 
 export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }) {
   const [status, setStatus] = useState('read');
@@ -19,7 +20,7 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
     const myBooks = JSON.parse(localStorage.getItem('myBooks'));
     myBooks[status].push(volume);
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
-    alert(`${volume.title} by ${volume.author} has been added to your '${status}' shelf!`);
+    alert(`${volume.title} by ${volume.authors[0]} has been added to your '${titlecase(status)}' shelf!`);
   }
 
   return (
@@ -81,7 +82,7 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
               }
             }/>
             <button className={styles.submit} onClick={handleSubmit}>
-              Add to {status}
+              Add to {titlecase(status)}
             </button>  
           </div>
         </form>

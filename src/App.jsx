@@ -12,15 +12,18 @@ export default function App() {
   const currentPage = view === 'home' ? <Home/> : <MyBooks/>
 
   useEffect(() => {
+    if (localStorage.getItem('myBooks')) {
+      return;
+    }
+
     const myBooks = {
       read: [],
       reading: [],
       'to-read': []
     };
 
-    if (!localStorage.getItem('myBooks')) {
-      localStorage.setItem('myBooks', JSON.stringify(myBooks));
-    }
+    localStorage.setItem('myBooks', JSON.stringify(myBooks));
+    
   }, []) // Empty dependency array so that effect only runs once on initial render
 
   return (
