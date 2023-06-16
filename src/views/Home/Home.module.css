@@ -3,13 +3,9 @@
     align-items: center;
 }
 
-.searchFor select {
-    border: 2px solid #1ca9c9;
-    border-radius: 10px;
-    color: rgba(0,0,0,0.5);
-    padding: 5px;
-    font-size: 1.2rem;
-    font-family: montserrat;
+.sortBy {
+    display: flex;
+    align-items: center;
 }
 
 .search-form {

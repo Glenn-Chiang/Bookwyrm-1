@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-import Banner from "../../components/Banner/Banner"
-import Navbar from '../../components/Navbar/navbar'
 import Pagination from './Pagination';
 import AddBookButton from "../../components/AddBookButton/AddBookButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
@@ -11,15 +9,15 @@ import AddBookModal from "../../components/modals/AddBookModal/AddBookModal";
 
 import styles from './home.module.css'
 import { useEffect, useState } from 'react'
+import titlecase from '../../utility/titlecase'
 
-
-async function fetchResults(searchType, searchTerms, startIndex, maxResults) {
+async function fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder) {
   try {
     let response;
 
     if (searchType === 'Title') {
       response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=intitle:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}`
+        `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=intitle:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}&orderBy=${sortOrder}`
       );
     } else {
       response = await fetch(
@@ -67,6 +65,8 @@ function getVolumes(results) {
 
 function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults }) {
   const [searchType, setSearchType] = useState('Title');
+  const [sortOrder, setSortOrder] = useState('relevance');
+
   const [searchTerms, setSearchTerms] = useState(''); // Will update ONLY when search button is clicked. Therefore, even if we change the input value, the app will still 'remember' the last search term
   const [inputValue, setInputValue] = useState(''); // Will continuously update whenever the user types
 
@@ -87,8 +87,13 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
   }
   
   // Triggered when user selects different search type
-  const handleOptionChange = event => {
+  const handleSearchTypeChange = event => {
     setSearchType(event.target.value);
+    setStartIndex(0);
+  }
+
+  const handleSortOrderChange = event => {
+    setSortOrder(event.target.value);
     setStartIndex(0);
   }
 
@@ -101,7 +106,7 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
 
     (async () => {    
       try {
-        const rawResults = await fetchResults(searchType, searchTerms, startIndex, maxResults);
+        const rawResults = await fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder);
         const volumes = getVolumes(rawResults);
         setSearchResults(volumes);
       } catch (error) {
@@ -112,14 +117,14 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
       }
     })();
     
-  }, [searchType, searchTerms, startIndex])
+  }, [searchType, sortOrder, searchTerms, startIndex])
 
 
   return (
     <form className={styles['search-form']} onSubmit={handleSearch}>
       <div className={styles.searchFor}>
         Search for a Book by
-        <select onChange={handleOptionChange}>
+        <select onChange={handleSearchTypeChange}>
           <option value='Title'>Title</option>
           <option value='Author'>Author</option>
         </select>
@@ -130,6 +135,13 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
         <button className={styles.searchBtn} type='submit'>Search</button>
       </div>
       <p className={searchTerms ? styles.show : styles.hide}>{`Showing results for: "${searchTerms}"`}</p>
+      <div className={styles.sortBy}>
+        Sort results by
+        <select onChange={handleSortOrderChange}>
+          <option value='relevance'>Relevance</option>
+          <option value='newest'>Newest</option>
+        </select>
+      </div>
     </form>
   )
 }
@@ -172,7 +184,7 @@ function ResultsList({ results: volumes, setSelectedInfo, setSelectedAdd }) {
 
 
 export default function Home() {
-  const [searchType, setSearchType] = useState('Title');
+  // const [searchType, setSearchType] = useState('Title');
   const [searchResults, setSearchResults] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const maxResults = 10;
@@ -197,8 +209,7 @@ export default function Home() {
 
   return (
     <>
-      
-      <SearchForm setSearchResults={setSearchResults} searchType={searchType} setSearchType={setSearchType} startIndex={startIndex} setStartIndex={setStartIndex} maxResults={maxResults}/>
+      <SearchForm setSearchResults={setSearchResults} startIndex={startIndex} setStartIndex={setStartIndex} maxResults={maxResults}/>
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
       <ResultsList results={searchResults} setSelectedInfo={setSelectedInfo} setSelectedAdd={setSelectedAdd}/>
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>

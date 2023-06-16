@@ -52,16 +52,6 @@
     justify-content: center;
 }
 
-.rating select {
-    border: 2px solid #1ca9c9;
-    border-radius: 10px;
-    color: rgba(0,0,0,0.5);
-    padding: 10px;
-    font-size: 1.2rem;
-    font-family: montserrat;
-}
-
-
 .buttons {
     display: flex;
     justify-content: center;
