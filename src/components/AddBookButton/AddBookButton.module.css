@@ -1,0 +1,11 @@
+.add {
+    background-color: #1ca9c9;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.add:hover {
+    background: #2586b6;
+}

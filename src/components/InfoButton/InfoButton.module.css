@@ -1,0 +1,10 @@
+.info {
+    background-color: #1ca9c9;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.info:hover {
+    background-color: #2586b6;
+}

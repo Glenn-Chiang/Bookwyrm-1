@@ -1,0 +1,31 @@
+.navbar {
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    border-radius: 20px;
+    background-color: #1ca9c9;
+    width: 80vw;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.navbar li {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+.navbar li:hover {
+    background-color: #2586b6;
+}
+
+.navbar li:first-child {
+    border-radius: 20px 0 0 20px;
+}
+
+.navbar li:last-child {
+    border-radius: 0 20px 20px 0;
+}

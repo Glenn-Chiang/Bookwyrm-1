@@ -1,0 +1,43 @@
+.close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.header {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.header > div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.info p {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info p :last-child {
+    color: rgba(0,0,0,0.5);
+}
+
+p.description {
+    flex-direction: column;
+    gap: 10px;
+}
+
+p.description :last-child {
+    line-height: 2;
+}
+
+

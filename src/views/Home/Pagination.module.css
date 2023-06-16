@@ -1,0 +1,23 @@
+div.pagination {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+div.page-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+div.page-buttons button {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+div.page-num {
+    display: flex;
+    justify-content: center;
+}
