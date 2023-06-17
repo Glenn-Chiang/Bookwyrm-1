@@ -4,15 +4,9 @@ import styles from './myBooks.module.css'
 import titlecase from "../../utility/titlecase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faBookBookmark, faBookReader, faCalendarDay, faCalendarPlus, faCheckCircle, faImage, faStar, faT, faUser } from "@fortawesome/free-solid-svg-icons";
+import RatingDropdown from "../../components/RatingDropdown";
 
 export default function MyBooks() {
-  // const [books, setBooks] = useState({});
-
-  // useEffect(() => {
-  //   const myBooks = JSON.parse(localStorage.getItem('myBooks'));
-  //   console.log(myBooks)
-  //   setBooks(myBooks);
-  // }, [])
   const books = JSON.parse(localStorage.getItem('myBooks'));
 
   const booksRead = books.read;
@@ -47,16 +41,15 @@ function Shelf({shelfName, books}) {
         <td>
           <img src={book.coverImg}></img>
         </td>
-        <td>
-          {book.title}
-        </td>
-        <td>
-          {book.authors}
-        </td>
-        <td>
-          {book.dateAdded}
-        </td>
-        {shelfName === 'read' && <td>{book.rating}</td>}
+        <td>{book.title}</td>
+        <td>{book.authors}</td>
+        <td>{book.dateAdded}</td>
+
+        {shelfName === 'read' && 
+          <td>
+            <RatingDropdown initialRating={book.rating}/>
+          </td>
+        }
         <td>
           <button>
             Change shelf

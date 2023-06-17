@@ -4,22 +4,29 @@ import modalStyles from '../modal.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faCirclePlus, faClose, faStar } from '@fortawesome/free-solid-svg-icons';
 import InfoButton from '../../InfoButton/InfoButton';
+import RatingDropdown from '../../RatingDropdown';
 import { useState } from 'react';
 import titlecase from '../../../utility/titlecase'
 
 export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }) {
   const [status, setStatus] = useState('read');
+  const [rating, setRating] = useState(10);
 
-  // Rating options
-  const options = Array.from({ length: 10 }, (_, index) => (
-    <option key={index} value={10 - index}>{10 - index}</option>
-  ));
+  const handleRatingOption = event => {
+    setRating(event.target.value);
+  }
 
   const handleSubmit = event => { // Confirm add book to myBooks
     event.preventDefault();
+
+    if (status === 'read') {
+      volume.rating = rating;
+    }
+
     const myBooks = JSON.parse(localStorage.getItem('myBooks'));
     myBooks[status].push(volume);
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
+
     alert(`${volume.title} by ${volume.authors[0]} has been added to your '${titlecase(status)}' shelf!`);
   }
 
@@ -69,9 +76,7 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
             <label className={styles.rating}>
               Rating
               <FontAwesomeIcon icon={faStar}/>
-              <select className={styles.rating}>
-                {options}
-              </select>
+              <RatingDropdown initialRating={10} handleRatingOption={handleRatingOption}/>
             </label>
           }
           <div className={styles.buttons}>
