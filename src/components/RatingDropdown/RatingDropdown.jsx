@@ -1,3 +1,6 @@
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles from './RatingDropdown.module.css'
 /* eslint-disable react/prop-types */
 export default function RatingDropdown({initialRating, handleRatingOption }) {
     const options = Array.from({ length: 10 }, (_, index) => (
@@ -7,8 +10,11 @@ export default function RatingDropdown({initialRating, handleRatingOption }) {
     ));
   
     return (
+      <>
+        <FontAwesomeIcon icon={faStar} className={styles.star}/>
         <select defaultValue={initialRating} onChange={handleRatingOption}>
             {options}
         </select>
+      </>
     )
   }

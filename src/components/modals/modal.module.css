@@ -23,15 +23,13 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
 }
 
 .modalBox-scrollable {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    /* overflow-y: scroll; */
+    /* overflow-x: hidden; */
     position: relative;
-    width: 40%;
-    height: 80%;
+    width: 80%;
 
     background-color: white;
     color: #1ca9c9;
@@ -40,7 +38,6 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .close {

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-import Pagination from './Pagination';
+import Pagination from "../../components/Pagination/Pagination";
 import AddBookButton from "../../components/AddBookButton/AddBookButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import InfoModal from '../../components/modals/InfoModal/InfoModal'
@@ -215,7 +215,8 @@ export default function Home() {
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
       <ResultsList results={searchResults} setSelectedInfo={setSelectedInfo} setSelectedAdd={setSelectedAdd}/>
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
-      {selectedInfo && <InfoModal volume={selectedInfo} setSelectedInfo={setSelectedInfo} setSelectedAdd={setSelectedAdd}/>}
+      
+      {selectedInfo && <InfoModal book={selectedInfo} handleClose={() => setSelectedInfo(null)} setSelectedAdd={setSelectedAdd}/>}
       {selectedAdd && <AddBookModal volume={selectedAdd} setSelectedAdd={setSelectedAdd} setSelectedInfo={setSelectedInfo}/>}
     </>
   )

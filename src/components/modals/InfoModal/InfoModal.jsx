@@ -5,15 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import AddBookButton from '../../AddBookButton/AddBookButton';
 
-export default function InfoModal({ setSelectedInfo, setSelectedAdd, volume }) {
-  if (!volume) {
+export default function InfoModal({ handleClose, setSelectedAdd, book }) {
+  if (!book) {
     return;
   }
 
   return (
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles['modalBox-scrollable']}>
-        <button className={modalStyles.close} onClick={() => setSelectedInfo(null)}>
+        <button className={modalStyles.close} onClick={handleClose}>
           <FontAwesomeIcon icon={faClose}/>
         </button>
         <h1 className={styles.header}>
@@ -22,43 +22,43 @@ export default function InfoModal({ setSelectedInfo, setSelectedAdd, volume }) {
             Info
           </div>
           <AddBookButton handleClick={() => {
-              setSelectedAdd(volume);
-              setSelectedInfo(null);
+              setSelectedAdd(book);
+              handleClose();
             }
           }/>
         </h1>
         <div className={styles.info}>
           <p>
             <span>ID:</span>
-            <span>{volume.id}</span>
+            <span>{book.id}</span>
           </p>
           <p>
             <span>Title:</span>
-            <span>{volume.title}</span>
+            <span>{book.title}</span>
           </p>
           <p>
             <span>Authors:</span>
-            <span>{volume.authors.join(', ')}</span>
+            <span>{book.authors.join(', ')}</span>
           </p>
           <p>
             <span>Publisher:</span>
-            <span>{volume.publisher}</span>
+            <span>{book.publisher}</span>
           </p>
           <p>
             <span>Published date:</span>
-            <span>{volume.publishedDate}</span>
+            <span>{book.publishedDate}</span>
           </p>
           <p>
             <span>Page count:</span>
-            <span>{volume.pageCount}</span>
+            <span>{book.pageCount}</span>
           </p>
           <p>
             <span>Categories:</span>
-            <span>{volume.categories}</span>
+            <span>{book.categories}</span>
           </p>
           <p className={styles.description}>
             <span>Description:</span>
-            <span>{volume.description}</span>
+            <span>{book.description}</span>
           </p>
         </div>
       </div>
