@@ -33,11 +33,32 @@ export default function MyBooks() {
   )
 }
 
+
 function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
   const [currentPage, setCurrentPage] = useState(0);
   const booksPerPage = 5;
   const startIndex = currentPage * booksPerPage;
   
+  // Filter by category; show all books by default
+  const [category, setCategory] = useState('all');
+
+  const handleSelectCategory = event => {
+    setCategory(event.target.value);
+    setCurrentPage(0);
+  }
+
+  const filterByCategory = () => {
+    if (category === 'all') {
+      return shelfBooks;
+    }
+    const categoryBooks = shelfBooks.filter(book => {
+      return book.categories[0].toLowerCase().includes(category);
+    })
+    return categoryBooks;
+  }
+
+
+  // Filtering by title/author string
   const [filterTerm, setFilterTerm] = useState('');
   
   const handleInputChange = event => {
@@ -45,28 +66,32 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     setCurrentPage(0);
   }
 
-  const filterBooks = () => {
+  const filterBooks = books => {
     if (!filterTerm) {
-      return shelfBooks;
+      return books;
     }
-    const filteredBooks = shelfBooks.filter(book => {
+    const filteredBooks = books.filter(book => {
       return book.title.toLowerCase().includes(filterTerm.toLowerCase()) || book.authors[0].toLowerCase().includes(filterTerm.toLowerCase());
     })
     return filteredBooks;
   }
 
-  const filteredBooks = filterBooks();
+  // Apply both filters
+  const filteredBooks = filterBooks(filterByCategory(shelfBooks));
 
-  const [sortOrder, setSortOrder] = useState('dateAdded');
-  const sortedBooks = sortOrder === 'dateAdded'
-                    ? filteredBooks // Original array is already in order of dateAdded
+  // Sorting
+  const [sortOrder, setSortOrder] = useState('oldToNew');
+  const sortedBooks = sortOrder === 'oldToNew'
+                    ? filteredBooks // Original array is already in order of oldToNew
+                    : sortOrder === 'newToOld'
+                    ? filteredBooks.slice().reverse()
                     : sortOrder === 'rating'
                     ? filteredBooks.slice().sort((a,b) => b.rating - a.rating)
                     : sortOrder === 'title'
                     ? filteredBooks.slice().sort((a,b) => a.title.localeCompare(b.title))
                     : filteredBooks.slice().sort((a,b) => a.authors[0].localeCompare(b.authors[0]))
 
-  const handleSelect = event => {
+  const handleSelectSort = event => {
     setSortOrder(event.target.value);
     setCurrentPage(0);
   }
@@ -95,7 +120,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
             <button>
               Status
             </button>
-            <RemoveButton targetId={book.id} renderedIndex={startIndex + index}/>
+            <RemoveButton targetId={book.id}/>
           </div>
         </td>
       </tr>
@@ -119,8 +144,8 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
   
   const [infoBook, setInfoBook] = useState(null); // InfoModal shows info for this book
   
-  function RemoveButton({ targetId, renderedIndex }) {
-    const removeBook = (targetId, renderedIndex) => {
+  function RemoveButton({ targetId }) {
+    const removeBook = targetId => {
       const targetIndex = shelfBooks.findIndex(book => book.id === targetId);
       shelfBooks.splice(targetIndex, 1);
       localStorage.setItem('myBooks', JSON.stringify(allBooks));
@@ -133,7 +158,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     }
 
     return (
-      <button onClick={() => removeBook(targetId, renderedIndex)}>
+      <button onClick={() => removeBook(targetId)}>
         Remove
       </button>
     )
@@ -155,9 +180,9 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
       </h3>
 
       <div className={styles.tableOptions}>
-        <Filter onInputChange={handleInputChange}/>
+        <Filter onInputChange={handleInputChange} onSelect={handleSelectCategory}/>
         <Pagination className={styles.pagination} handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage + 1} numPages={numPages}/>
-        <SortDropdown sortOrder={sortOrder} onSelect={handleSelect}/>
+        <SortDropdown sortOrder={sortOrder} onSelect={handleSelectSort}/>
       </div>
 
       <table className={styles.shelfBooks}>
@@ -202,8 +227,8 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
 }
 
 
-function Filter({ onInputChange }) {
-  const categories = ['fiction', 'philosophy', 'drama', 'poetry', 'history'];
+function Filter({ onInputChange, onSelect }) {
+  const categories = ['all', 'fiction', 'philosophy', 'drama', 'poetry', 'history'];
   const categoryOptions = categories.map((category, index) => {
     return (
       <option key={index} value={category}>{titlecase(category)}</option>
@@ -215,7 +240,7 @@ function Filter({ onInputChange }) {
       <input onChange={onInputChange} placeholder='Filter by title or author'/>
       <div className={styles.category}>
         Filter by category
-        <select>
+        <select onChange={onSelect}>
           {categoryOptions}
         </select>
       </div>
@@ -229,7 +254,8 @@ function SortDropdown({sortOrder, onSelect}) {
     <div className={styles.sortOrder}>
       Sort by
       <select defaultValue={sortOrder} onChange={onSelect}>
-        <option value='dateAdded'>Date added</option>
+        <option value='oldToNew'>Oldest</option>
+        <option value='newToOld'>Newest</option>
         <option value='rating'>Rating</option>
         <option value='author'>Author (A-Z)</option>
         <option value='title'>Title (A-Z)</option>
