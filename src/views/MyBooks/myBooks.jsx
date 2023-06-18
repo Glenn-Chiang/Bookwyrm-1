@@ -102,7 +102,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     )
   })
   
-  const numPages = Math.floor(filteredBooks.length / booksPerPage + 1);
+  const numPages = Math.floor(filteredBooks.length / booksPerPage) + (filteredBooks.length % booksPerPage === 0 ? 0 : 1);
   const handleNext = () => {
     if (startIndex + booksPerPage >= filteredBooks.length) {
       return;
@@ -127,7 +127,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
       
       setAllBooks({...allBooks, shelfName: shelfBooks});
   
-      if (renderedIndex === filteredBooks.length) { // If we are removing the last book on a page, go to prev page
+      if (startIndex === filteredBooks.length) { // If we are removing the last book on a page, go to prev page
         setCurrentPage(currentPage - 1);
       }
     }
