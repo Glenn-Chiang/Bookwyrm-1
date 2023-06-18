@@ -40,25 +40,25 @@ async function fetchResults(searchType, searchTerms, startIndex, maxResults, sor
 
 }
 
-function getVolumes(results) {
-  const volumes = results.map(result => {
-    const volumeInfo = result.volumeInfo;
+function getBooks(results) {
+  const books = results.map(result => {
+    const bookInfo = result.volumeInfo;
     return {
       id: result.id,
-      title: volumeInfo.title,
-      authors: volumeInfo.authors ? volumeInfo.authors : ['-'], // No authors
-      coverImg: volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : '', // No image available
-      publisher: volumeInfo.publisher ? volumeInfo.publisher : '-', // No publisher
+      title: bookInfo.title,
+      authors: bookInfo.authors ? bookInfo.authors : ['-'], // No authors
+      coverImg: bookInfo.imageLinks ? bookInfo.imageLinks.thumbnail : '', // No image available
+      publisher: bookInfo.publisher ? bookInfo.publisher : '-', // No publisher
       
-      categories: volumeInfo.categories,
-      pageCount: volumeInfo.pageCount,
-      description: volumeInfo.description,
-      printType: volumeInfo.printType,
-      publishedDate: volumeInfo.publishedDate
+      categories: bookInfo.categories,
+      pageCount: bookInfo.pageCount,
+      description: bookInfo.description,
+      printType: bookInfo.printType,
+      publishedDate: bookInfo.publishedDate
     }
   })
 
-  return volumes;
+  return books;
 }
 
 
@@ -106,8 +106,8 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
     (async () => {    
       try {
         const rawResults = await fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder);
-        const volumes = getVolumes(rawResults);
-        setSearchResults(volumes);
+        const books = getBooks(rawResults);
+        setSearchResults(books);
       } catch (error) {
         console.log(error);
         // if (error instanceof TypeError) { // gone beyond last page of results, thus rawResults is undefined
@@ -149,27 +149,27 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
 }
 
 
-function ResultsList({ results: volumes, setSelectedInfo, setSelectedAdd }) {
-  const resultsItems = volumes.map((volume, idx) => {
+function ResultsList({ results: books, setSelectedInfo, setSelectedAdd }) {
+  const resultsItems = books.map((book, idx) => {
     return (
       <li key={idx}>
         <div className={styles.cover}>
-          <img src={volume.coverImg} alt='No image available'></img>
+          <img src={book.coverImg} alt='No image available'></img>
         </div>
         <div className={styles.details}>
           <p className={styles.title}>
-            {volume.title}
+            {book.title}
           </p> 
           <p className={styles.authors}>
-            Author(s): {volume.authors.join(', ')}
+            Author(s): {book.authors.join(', ')}
           </p>  
           <p className={styles.publisher}>
-            Publisher: {volume.publisher}
+            Publisher: {book.publisher}
           </p>
 
           <div className={styles.bookBtns}>
-            <InfoButton handleClick={() => setSelectedInfo(volume)}/>
-            <AddBookButton handleClick={() => setSelectedAdd(volume)}/>
+            <InfoButton handleClick={() => setSelectedInfo(book)}/>
+            <AddBookButton handleClick={() => setSelectedAdd(book)}/>
           </div>
         </div>
       </li>
@@ -179,7 +179,7 @@ function ResultsList({ results: volumes, setSelectedInfo, setSelectedAdd }) {
   
   return (
     <ol className={styles.resultsList}>
-      {volumes.length === 0 ? 'No books found' : resultsItems}
+      {books.length === 0 ? 'No books found' : resultsItems}
     </ol>
   )
 }
@@ -217,7 +217,7 @@ export default function Home() {
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
       
       {selectedInfo && <InfoModal book={selectedInfo} handleClose={() => setSelectedInfo(null)} setSelectedAdd={setSelectedAdd}/>}
-      {selectedAdd && <AddBookModal volume={selectedAdd} setSelectedAdd={setSelectedAdd} setSelectedInfo={setSelectedInfo}/>}
+      {selectedAdd && <AddBookModal book={selectedAdd} handleClose={() => setSelectedAdd(null)} setSelectedInfo={setSelectedInfo}/>}
     </>
   )
 }

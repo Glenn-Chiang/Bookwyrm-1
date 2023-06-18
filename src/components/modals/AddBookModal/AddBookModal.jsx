@@ -9,7 +9,7 @@ import { useState } from 'react';
 import titlecase from '../../../utility/titlecase'
 import getDate from '../../../utility/getDate'
 
-export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }) {
+export default function AddBookModal({book, handleClose, setSelectedInfo }) {
   const [status, setStatus] = useState('read');
   const [rating, setRating] = useState(10);
 
@@ -20,26 +20,34 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
   const handleSubmit = event => { // Confirm add book to myBooks
     event.preventDefault();
 
-    if (status === 'read') {
-      volume.rating = rating;
+    const myBooks = JSON.parse(localStorage.getItem('myBooks'));
+    for (let shelf in myBooks) {
+      if (myBooks[shelf].find(myBook => myBook.id === book.id)) {
+        alert(`This book is already in your '${titlecase(shelf)}' shelf!`)  
+        handleClose();
+        return;
+      }
     }
 
-    volume.dateAdded = getDate();
+    if (status === 'read') {
+      book.rating = rating;
+    }
 
-    const myBooks = JSON.parse(localStorage.getItem('myBooks'));
-    myBooks[status].push(volume);
+    book.dateAdded = getDate();
+
+    myBooks[status].push(book);
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
 
-    alert(`${volume.title} by ${volume.authors[0]} has been added to your '${titlecase(status)}' shelf!`);
+    alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(status)}' shelf!`);
 
-    setSelectedAdd(null);
+    handleClose();
   }
 
   return (
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles.modalBox}>
 
-        <button className={modalStyles.close} onClick={() => setSelectedAdd(null)}>
+        <button className={modalStyles.close} onClick={handleClose}>
           <FontAwesomeIcon icon={faClose}/>
         </button>
         <h1 className={styles.header}>
@@ -49,13 +57,13 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
 
         <div className={styles.info}>
           <p>
-            <span>Title</span> <span>{volume.title}</span>
+            <span>Title</span> <span>{book.title}</span>
           </p>
           <p>
-            <span>Authors</span> <span>{volume.authors.join(', ')}</span>
+            <span>Authors</span> <span>{book.authors.join(', ')}</span>
           </p>
           <p>
-            <span>Publisher</span> <span>{volume.publisher}</span>
+            <span>Publisher</span> <span>{book.publisher}</span>
           </p>
         </div>
         <form className={styles.form}>
@@ -86,8 +94,8 @@ export default function AddBookModal({ volume, setSelectedAdd, setSelectedInfo }
           <div className={styles.buttons}>
             <InfoButton handleClick={event => {
                 event.preventDefault();
-                setSelectedInfo(volume);
-                setSelectedAdd(null);
+                setSelectedInfo(book);
+                handleClose(null);
               }
             }/>
             <button className={styles.submit} onClick={handleSubmit}>

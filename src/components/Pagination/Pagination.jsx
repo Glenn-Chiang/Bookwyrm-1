@@ -4,7 +4,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import styles from './pagination.module.css'
 
-export default function Pagination({ handleNext, handlePrev, currentPage }) {
+export default function Pagination({ handleNext, handlePrev, currentPage, numPages}) {
     return (
       <div className={styles.pagination}>
         <div className={styles['page-buttons']}>
@@ -16,7 +16,7 @@ export default function Pagination({ handleNext, handlePrev, currentPage }) {
           </button>
         </div>
         <div className={styles['page-num']}>
-          Page {currentPage}
+          Page {currentPage} {numPages && `of ${numPages}`}
         </div>
       </div>
   

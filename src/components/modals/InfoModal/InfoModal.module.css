@@ -34,6 +34,7 @@
 p.description {
     flex-direction: column;
     gap: 10px;
+    
 }
 
 p.description :last-child {

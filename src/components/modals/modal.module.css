@@ -13,8 +13,7 @@
 
 .modalBox {
     position: relative;
-    width: 40%;
-    /* height: 80%; */
+    width: 400px;
 
     background-color: white;
     color: #1ca9c9;
@@ -30,6 +29,7 @@
     /* overflow-x: hidden; */
     position: relative;
     width: 80%;
+    max-height: 90vh;
 
     background-color: white;
     color: #1ca9c9;

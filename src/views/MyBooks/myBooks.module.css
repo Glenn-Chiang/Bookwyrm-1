@@ -9,7 +9,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
+.shelf {
+    padding: 40px;
 }
 
 .shelfHeader {
@@ -80,20 +83,26 @@
 .tableOptions {
     display: flex;
     gap: 20px;
-    justify-content: center;
+    padding: 20px;
 }
 
 .filter {
     flex: 1;
     display: flex;
+    flex-direction: column;
     gap: 10px;
-    align-items: center;
 }
 
 .filter input {
     border-radius: 10px;
     border: 2px solid #1ca9c9;
-    padding: 5px;
+    padding: 8px;
+}
+
+.category {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .sortOrder {
@@ -101,5 +110,5 @@
     display: flex;
     gap: 10px;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
 }

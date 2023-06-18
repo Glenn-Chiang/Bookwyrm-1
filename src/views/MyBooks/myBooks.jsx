@@ -8,10 +8,10 @@ import RatingDropdown from "../../components/RatingDropdown/RatingDropdown";
 import Pagination from "../../components/Pagination/Pagination";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import InfoModal from "../../components/modals/InfoModal/InfoModal"
+import { render } from "react-dom";
 
 export default function MyBooks() {
   const [allBooks, setAllBooks] = useState(JSON.parse(localStorage.getItem('myBooks')));
-  console.log('fuck you')
   const booksRead = allBooks.read;
   const booksReading = allBooks.reading;
   const booksToRead = allBooks['to-read'];
@@ -95,16 +95,14 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
             <button>
               Status
             </button>
-            <button onClick={() => removeBook(book.id)}>
-              Remove
-            </button>
+            <RemoveButton targetId={book.id} renderedIndex={startIndex + index}/>
           </div>
         </td>
       </tr>
     )
   })
   
-  
+  const numPages = Math.floor(filteredBooks.length / booksPerPage + 1);
   const handleNext = () => {
     if (startIndex + booksPerPage >= filteredBooks.length) {
       return;
@@ -121,13 +119,26 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
   
   const [infoBook, setInfoBook] = useState(null); // InfoModal shows info for this book
   
-  const removeBook = targetId => {
-    const targetIndex = shelfBooks.findIndex(book => book.id === targetId);
-    shelfBooks.splice(targetIndex, 1);
-    localStorage.setItem('myBooks', JSON.stringify(allBooks));
-    
-    setAllBooks({...allBooks, shelfName: shelfBooks});
+  function RemoveButton({ targetId, renderedIndex }) {
+    const removeBook = (targetId, renderedIndex) => {
+      const targetIndex = shelfBooks.findIndex(book => book.id === targetId);
+      shelfBooks.splice(targetIndex, 1);
+      localStorage.setItem('myBooks', JSON.stringify(allBooks));
+      
+      setAllBooks({...allBooks, shelfName: shelfBooks});
+  
+      if (renderedIndex === filteredBooks.length) { // If we are removing the last book on a page, go to prev page
+        setCurrentPage(currentPage - 1);
+      }
+    }
+
+    return (
+      <button onClick={() => removeBook(targetId, renderedIndex)}>
+        Remove
+      </button>
+    )
   }
+  
 
   const updateRating = (id, newRating) => {
     const targetBook = shelfBooks.find(book => book.id === id);
@@ -135,29 +146,18 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     localStorage.setItem('myBooks', JSON.stringify(allBooks));
   }
 
+
   return (
-    <>
+    <div className={styles.shelf}>
       <h3 className={styles.shelfHeader}>
         <FontAwesomeIcon icon={shelfName === 'read' ? faCheckCircle : shelfName === 'reading' ? faBookBookmark : faCalendarPlus}/>
         {titlecase(shelfName)}
       </h3>
 
       <div className={styles.tableOptions}>
-        <div className={styles.filter}>
-          <input onChange={handleInputChange} placeholder='Filter by title or author'/>
-        </div>
-
-        <Pagination className={styles.pagination} handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage + 1}/>
-        
-        <div className={styles.sortOrder}>
-          Sort by
-          <select defaultValue='dateAdded' onChange={handleSelect}>
-            <option value='dateAdded'>Date added</option>
-            <option value='rating'>Rating</option>
-            <option value='author'>Author (A-Z)</option>
-            <option value='title'>Title (A-Z)</option>
-          </select>
-        </div>
+        <Filter onInputChange={handleInputChange}/>
+        <Pagination className={styles.pagination} handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage + 1} numPages={numPages}/>
+        <SortDropdown sortOrder={sortOrder} onSelect={handleSelect}/>
       </div>
 
       <table className={styles.shelfBooks}>
@@ -190,13 +190,50 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
         </thead>
         <tbody>
         {displayedBooks.length === 0 
-          ? <tr><td colSpan={shelfName === 'read' ? 7 : 6}>No books have been added to this shelf</td></tr>
+          ? <tr><td colSpan={shelfName === 'read' ? 7 : 6}>No books found</td></tr>
           : displayedBooks
         }
           
         </tbody>
       </table>
       {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
-    </>
+    </div>
+  )
+}
+
+
+function Filter({ onInputChange }) {
+  const categories = ['fiction', 'philosophy', 'drama', 'poetry', 'history'];
+  const categoryOptions = categories.map((category, index) => {
+    return (
+      <option key={index} value={category}>{titlecase(category)}</option>
+    )
+  })
+  
+  return (
+    <div className={styles.filter}>
+      <input onChange={onInputChange} placeholder='Filter by title or author'/>
+      <div className={styles.category}>
+        Filter by category
+        <select>
+          {categoryOptions}
+        </select>
+      </div>
+    </div>
+  )
+}
+
+
+function SortDropdown({sortOrder, onSelect}) {
+  return (
+    <div className={styles.sortOrder}>
+      Sort by
+      <select defaultValue={sortOrder} onChange={onSelect}>
+        <option value='dateAdded'>Date added</option>
+        <option value='rating'>Rating</option>
+        <option value='author'>Author (A-Z)</option>
+        <option value='title'>Title (A-Z)</option>
+      </select>
+    </div>
   )
 }
