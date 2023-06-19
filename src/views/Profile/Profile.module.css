@@ -1,0 +1,44 @@
+.header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statsTable {
+    table-layout: fixed;
+    border: 2px solid white;
+    border-radius: 10px;
+    border-spacing: 0;
+}
+
+.statsTable th, .statsTable td {
+    padding: 10px;
+}
+
+.statsTable th {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.statsTable td {
+    background-color: white;
+    color: rgb(0,20,40);
+}
+
+.statsTable tr:first-child td {
+    border-radius: 0 6px 0 0;
+}
+
+.statsTable tr:last-child td {
+    border-radius: 0 0 6px 0;
+}

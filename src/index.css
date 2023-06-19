@@ -3,6 +3,7 @@
 body {
   background-color: rgb(0,20,40);
   padding: 20px;
+  text-align: center;
 }
 
 body, input, button {
