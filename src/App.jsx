@@ -16,11 +16,7 @@ export default function App() {
       return;
     }
 
-    const myBooks = {
-      read: [],
-      reading: [],
-      'to-read': []
-    };
+    const myBooks = []
 
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
     

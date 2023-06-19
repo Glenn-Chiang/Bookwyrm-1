@@ -216,8 +216,9 @@ export default function Home() {
       <ResultsList results={searchResults} setSelectedInfo={setSelectedInfo} setSelectedAdd={setSelectedAdd}/>
       <Pagination handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage}/>
       
-      {selectedInfo && <InfoModal book={selectedInfo} handleClose={() => setSelectedInfo(null)} setSelectedAdd={setSelectedAdd}/>}
-      {selectedAdd && <AddBookModal book={selectedAdd} handleClose={() => setSelectedAdd(null)} setSelectedInfo={setSelectedInfo}/>}
+      {selectedInfo && <InfoModal book={selectedInfo} handleClose={() => setSelectedInfo(null)} />}
+      {selectedAdd && <AddBookModal modalType='addBook' book={selectedAdd} handleClose={() => setSelectedAdd(null)} />}
     </>
   )
 }
+

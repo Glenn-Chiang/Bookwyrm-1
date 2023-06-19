@@ -1,21 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react"
 import styles from './myBooks.module.css'
-import titlecase from "../../utility/titlecase";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookBookmark, faBookReader, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser } from "@fortawesome/free-solid-svg-icons";
-import RatingDropdown from "../../components/RatingDropdown/RatingDropdown";
-import Pagination from "../../components/Pagination/Pagination";
-import InfoButton from "../../components/InfoButton/InfoButton";
+import titlecase from "../../utility/titlecase"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBookBookmark, faBookReader, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser, faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
+import RatingDropdown from "../../components/RatingDropdown/RatingDropdown"
+import Pagination from "../../components/Pagination/Pagination"
+import InfoButton from "../../components/InfoButton/InfoButton"
 import InfoModal from "../../components/modals/InfoModal/InfoModal"
-import { render } from "react-dom";
+import StatusModal from "../../components/modals/StatusModal/StatusModal"
 
 export default function MyBooks() {
-  const [allBooks, setAllBooks] = useState(JSON.parse(localStorage.getItem('myBooks')));
-  const booksRead = allBooks.read;
-  const booksReading = allBooks.reading;
-  const booksToRead = allBooks['to-read'];
+  const [myBooks, setAllBooks] = useState(JSON.parse(localStorage.getItem('myBooks')));
   
+  const booksRead = myBooks.filter(book => book.status === 'read');
+  const booksReading = myBooks.filter(book => book.status === 'reading');
+  const booksToRead = myBooks.filter(book => book.status === 'to-read');
 
   return (
     <div className={styles.main}>
@@ -25,9 +25,9 @@ export default function MyBooks() {
       </h2>
       
       <div className={styles.shelves}>
-        <Shelf shelfName='read' shelfBooks={booksRead} allBooks={allBooks} setAllBooks={setAllBooks}/>
-        <Shelf shelfName='reading' shelfBooks={booksReading} allBooks={allBooks} setAllBooks={setAllBooks}/>
-        <Shelf shelfName='to-read' shelfBooks={booksToRead} allBooks={allBooks} setAllBooks={setAllBooks}/>
+        <Shelf shelfName='read' shelfBooks={booksRead} allBooks={myBooks} setAllBooks={setAllBooks}/>
+        <Shelf shelfName='reading' shelfBooks={booksReading} allBooks={myBooks} setAllBooks={setAllBooks}/>
+        <Shelf shelfName='to-read' shelfBooks={booksToRead} allBooks={myBooks} setAllBooks={setAllBooks}/>
       </div>
     </div>
   )
@@ -35,18 +35,15 @@ export default function MyBooks() {
 
 
 function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const booksPerPage = 5;
-  const startIndex = currentPage * booksPerPage;
   
   // Filter by category; show all books by default
   const [category, setCategory] = useState('all');
-
+  
   const handleSelectCategory = event => {
     setCategory(event.target.value);
     setCurrentPage(0);
   }
-
+  
   const filterByCategory = () => {
     if (category === 'all') {
       return shelfBooks;
@@ -56,16 +53,15 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     })
     return categoryBooks;
   }
-
-
-  // Filtering by title/author string
+  
+  // Filter by search terms
   const [filterTerm, setFilterTerm] = useState('');
   
   const handleInputChange = event => {
     setFilterTerm(event.target.value);
     setCurrentPage(0);
   }
-
+  
   const filterBooks = books => {
     if (!filterTerm) {
       return books;
@@ -75,25 +71,67 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     })
     return filteredBooks;
   }
-
+  
   // Apply both filters
   const filteredBooks = filterBooks(filterByCategory(shelfBooks));
-
+  
   // Sorting
   const [sortOrder, setSortOrder] = useState('oldToNew');
   const sortedBooks = sortOrder === 'oldToNew'
-                    ? filteredBooks // Original array is already in order of oldToNew
-                    : sortOrder === 'newToOld'
-                    ? filteredBooks.slice().reverse()
-                    : sortOrder === 'rating'
-                    ? filteredBooks.slice().sort((a,b) => b.rating - a.rating)
-                    : sortOrder === 'title'
-                    ? filteredBooks.slice().sort((a,b) => a.title.localeCompare(b.title))
-                    : filteredBooks.slice().sort((a,b) => a.authors[0].localeCompare(b.authors[0]))
-
+  ? filteredBooks    // Original array is already in order of oldToNew
+  : sortOrder === 'newToOld'
+  ? filteredBooks.slice().reverse()
+  : sortOrder === 'rating'
+  ? filteredBooks.slice().sort((a,b) => b.rating - a.rating)
+  : sortOrder === 'title'
+  ? filteredBooks.slice().sort((a,b) => a.title.localeCompare(b.title))
+  : filteredBooks.slice().sort((a,b) => a.authors[0].localeCompare(b.authors[0]))
+  
   const handleSelectSort = event => {
     setSortOrder(event.target.value);
     setCurrentPage(0);
+  }
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(0);
+  const booksPerPage = 5;
+  const startIndex = currentPage * booksPerPage;
+  const numPages = Math.floor(filteredBooks.length / booksPerPage) + (filteredBooks.length % booksPerPage === 0 ? 0 : 1);
+  const handleNext = () => {
+    if (startIndex + booksPerPage >= filteredBooks.length) {
+      return;
+    }
+    setCurrentPage(currentPage + 1);
+  }
+  
+  const handlePrev = () => {
+    if (currentPage === 0) {
+      return;
+    }
+    setCurrentPage(currentPage - 1);
+  }
+
+
+  const [statusBook, setStatusBook] = useState(null); // Show status modal for this book
+  const handleStatus = book => {
+    setStatusBook(book);
+  }
+
+  // const changeShelf = targetId => {
+  //   return;
+  // }
+  
+
+  const removeBook = targetId => {
+    const targetIndex = allBooks.findIndex(book => book.id === targetId);
+    allBooks.splice(targetIndex, 1);
+    localStorage.setItem('myBooks', JSON.stringify(allBooks));
+    
+    setAllBooks([...allBooks]);
+    
+    if (startIndex === filteredBooks.length) { // If we are removing the last book on a page, go to prev page
+      setCurrentPage(currentPage - 1);
+    }
   }
 
   const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => {
@@ -117,53 +155,16 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
         <td>
           <div className={styles.buttons}>
             <InfoButton handleClick={() => setInfoBook(book)}/>
-            <button>
-              Status
-            </button>
-            <RemoveButton targetId={book.id}/>
+            <StatusButton targetId={book.id} handleClick={() => handleStatus(book)}/>
+            <RemoveButton targetId={book.id} handleClick={removeBook}/>
           </div>
         </td>
       </tr>
     )
   })
-  
-  const numPages = Math.floor(filteredBooks.length / booksPerPage) + (filteredBooks.length % booksPerPage === 0 ? 0 : 1);
-  const handleNext = () => {
-    if (startIndex + booksPerPage >= filteredBooks.length) {
-      return;
-    }
-    setCurrentPage(currentPage + 1);
-  }
-  
-  const handlePrev = () => {
-    if (currentPage === 0) {
-      return;
-    }
-    setCurrentPage(currentPage - 1);
-  }
+
   
   const [infoBook, setInfoBook] = useState(null); // InfoModal shows info for this book
-  
-  function RemoveButton({ targetId }) {
-    const removeBook = targetId => {
-      const targetIndex = shelfBooks.findIndex(book => book.id === targetId);
-      shelfBooks.splice(targetIndex, 1);
-      localStorage.setItem('myBooks', JSON.stringify(allBooks));
-      
-      setAllBooks({...allBooks, shelfName: shelfBooks});
-  
-      if (startIndex === filteredBooks.length) { // If we are removing the last book on a page, go to prev page
-        setCurrentPage(currentPage - 1);
-      }
-    }
-
-    return (
-      <button onClick={() => removeBook(targetId)}>
-        Remove
-      </button>
-    )
-  }
-  
 
   const updateRating = (id, newRating) => {
     const targetBook = shelfBooks.find(book => book.id === id);
@@ -181,7 +182,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
 
       <div className={styles.tableOptions}>
         <Filter onInputChange={handleInputChange} onSelect={handleSelectCategory}/>
-        <Pagination className={styles.pagination} handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage + 1} numPages={numPages}/>
+        <Pagination className={styles.pagination} handleNext={handleNext} handlePrev={handlePrev} currentPage={currentPage + 1} numPages={numPages ? numPages : 1}/>
         <SortDropdown sortOrder={sortOrder} onSelect={handleSelectSort}/>
       </div>
 
@@ -222,6 +223,7 @@ function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
         </tbody>
       </table>
       {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
+      {statusBook && <StatusModal book={statusBook} allBooks={allBooks} setAllBooks={setAllBooks} handleClose={() => setStatusBook(null)}/>}
     </div>
   )
 }
@@ -261,5 +263,24 @@ function SortDropdown({sortOrder, onSelect}) {
         <option value='title'>Title (A-Z)</option>
       </select>
     </div>
+  )
+}
+
+
+function RemoveButton({ targetId, handleClick }) {
+  return (
+    <button onClick={() => handleClick(targetId)}>
+      <FontAwesomeIcon icon={faXmarkCircle}/>
+      Remove
+    </button>
+  )
+}
+
+
+function StatusButton({ targetId, handleClick }) {
+  return (
+    <button onClick={() => handleClick(targetId)}>
+      Status
+    </button>
   )
 }

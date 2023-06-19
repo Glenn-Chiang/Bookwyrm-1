@@ -1,0 +1,19 @@
+.button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: -14px;
+    margin-right: -14px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: lightcoral;
+}
+
+.button:hover {
+    background-color: crimson;
+}

@@ -1,52 +1,35 @@
 /* eslint-disable react/prop-types */
-import styles from './AddBookModal.module.css'
+import styles from '../AddBookModal/AddBookModal.module.css'
 import modalStyles from '../modal.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookBookmark, faCalendarPlus, faCheckCircle, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-// import InfoButton from '../../InfoButton/InfoButton';
-import RatingDropdown from '../../RatingDropdown/RatingDropdown';
+import { faBarsProgress, faBookBookmark, faCalendarPlus, faCheckCircle} from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import titlecase from '../../../utility/titlecase'
 import getDate from '../../../utility/getDate'
 import CloseButton from '../../CloseButton/CloseButton';
 
-export default function AddBookModal({book, handleClose: closeModal}) {
-  const myBooks = JSON.parse(localStorage.getItem('myBooks'));
+export default function StatusModal({ book, allBooks: myBooks, setAllBooks: setMyBooks, handleClose: closeModal }) {
 
-  const [selectedStatus, setSelectedStatus] = useState('read');
-  const [rating, setRating] = useState(10);
+  const [selectedStatus, setSelectedStatus] = useState(book.status);
 
-  const handleRatingOption = event => {
-    setRating(event.target.value);
-  }
-
-  const addBook = () => {
-    const myBook = myBooks.find(myBook => myBook.id === book.id); // Check if user already owns book
-    if (myBook) {
-      alert(`This book is already in your '${titlecase(myBook.status)}' shelf!`)  
+  const updateStatus = () => {
+    if (selectedStatus === book.status) { // Status not changed -> do nothing
       closeModal();
       return;
     }
-    
-    book.status = selectedStatus;
-  
-    if (selectedStatus === 'read') {
-      book.rating = rating;
-    }
-  
-    book.dateAdded = getDate();
-  
-    myBooks.push(book);
+
+    const myBook = myBooks.find(myBook => myBook.id === book.id);
+    myBook.dateAdded = getDate(); // Date added will refer to the date on which the book was added to its current shelf
+    myBook.status = selectedStatus;
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
-  
-    alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(selectedStatus)}' shelf!`);
-  
+    setMyBooks([...myBooks]);
+    alert(`${book.title} by ${book.authors[0]} has been moved to your '${titlecase(selectedStatus)}' shelf!`)
     closeModal();
   }
 
   const handleSubmit = event => { // Confirm add book to myBooks
     event.preventDefault();
-    addBook();
+    updateStatus();
   }
 
   const handleStatusChange = event => {
@@ -56,13 +39,11 @@ export default function AddBookModal({book, handleClose: closeModal}) {
   return (
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles.modalBox}>
-        <CloseButton onClick={closeModal}/>
-
+        <CloseButton onClick={closeModal} />
         <h1 className={styles.header}>
-          <FontAwesomeIcon icon={faCirclePlus}/>
-          Add Book
+          <FontAwesomeIcon icon={faBarsProgress} />
+          Update Status
         </h1>
-
         <div className={styles.info}>
           <p>
             <span>Title</span> <span>{book.title}</span>
@@ -78,33 +59,26 @@ export default function AddBookModal({book, handleClose: closeModal}) {
           <fieldset className={styles.status}>
             <legend>Status</legend>
             <label>
-              <input type='radio' name='status' value='read' onChange={handleStatusChange} checked={selectedStatus === 'read'}/>
+              <input type='radio' name='status' value='read' onChange={handleStatusChange} checked={selectedStatus === 'read'} />
               Read
-              <FontAwesomeIcon icon={faCheckCircle}/>
+              <FontAwesomeIcon icon={faCheckCircle} />
             </label>
             <label>
               <input type='radio' name='status' value='reading' onChange={handleStatusChange} checked={selectedStatus === 'reading'}/>
               Reading
-              <FontAwesomeIcon icon={faBookBookmark}/>
+              <FontAwesomeIcon icon={faBookBookmark} />
             </label>
             <label>
               <input type='radio' name='status' value='to-read' onChange={handleStatusChange} checked={selectedStatus === 'to-read'}/>
               To-Read
-              <FontAwesomeIcon icon={faCalendarPlus}/>
+              <FontAwesomeIcon icon={faCalendarPlus} />
             </label>
           </fieldset>
 
-          {selectedStatus === 'read' &&
-            <label className={styles.rating}>
-              Rating
-              <RatingDropdown initialRating={10} handleRatingOption={handleRatingOption}/>
-            </label>
-          }
-
           <div className={styles.buttons}>
             <button className={styles.submit} onClick={handleSubmit}>
-              {`Add to ${titlecase(selectedStatus)}`}
-            </button>  
+              Confirm
+            </button>
           </div>
         </form>
       </div>

@@ -2,10 +2,11 @@
 import styles from './InfoModal.module.css'
 import modalStyles from '../modal.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-import AddBookButton from '../../AddBookButton/AddBookButton';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import CloseButton from '../../CloseButton/CloseButton';
+// import AddBookButton from '../../AddBookButton/AddBookButton';
 
-export default function InfoModal({ handleClose, setSelectedAdd, book }) {
+export default function InfoModal({ handleClose, book }) {
   if (!book) {
     return;
   }
@@ -13,19 +14,12 @@ export default function InfoModal({ handleClose, setSelectedAdd, book }) {
   return (
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles['modalBox-scrollable']}>
-        <button className={modalStyles.close} onClick={handleClose}>
-          <FontAwesomeIcon icon={faClose}/>
-        </button>
+        <CloseButton onClick={handleClose}/>
         <h1 className={styles.header}>
           <div>
             <FontAwesomeIcon icon={faInfoCircle}/>
             Info
           </div>
-          <AddBookButton handleClick={() => {
-              setSelectedAdd(book);
-              handleClose();
-            }
-          }/>
         </h1>
         <div className={styles.info}>
           <p>
