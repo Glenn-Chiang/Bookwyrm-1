@@ -3,16 +3,13 @@ import { useState } from "react";
 import styles from './myBooks.module.css'
 import titlecase from "../../utility/titlecase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBookBookmark, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser, faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
-import RatingDropdown from "../../components/RatingDropdown/RatingDropdown"
+import { faBookBookmark, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import Pagination from "../../components/Pagination/Pagination"
-import InfoButton from "../../components/InfoButton/InfoButton"
 import InfoModal from "../../components/modals/InfoModal/InfoModal"
 import StatusModal from "../../components/modals/StatusModal/StatusModal"
-import updateBook from "../../crudFunctions/updateBook";
-import removeBook from "../../crudFunctions/removeBook";
+import BookEntry from "./BookEntry";
 
-export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
+export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
   
     // Filter by category; show all books by default
     const [category, setCategory] = useState('all');
@@ -91,47 +88,11 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
   
   
     const [statusBook, setStatusBook] = useState(null); // Show status modal for this book
-    const handleStatusButton = book => { // Show the updateStatus modal for this book
-      setStatusBook(book);
-    }
-  
+    const [infoBook, setInfoBook] = useState(null); // Show info modal for this book
 
-    const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => {
-      return (
-        <tr key={book.id} className={styles.book}>
-          <td>
-            {startIndex + index + 1}
-          </td>
-          <td>
-            <img src={book.coverImg}></img>
-          </td>
-          <td>{book.title}</td>
-          <td>{book.authors.join(', ')}</td>
-          <td>{book.dateAdded}</td>
-  
-          {shelfName === 'read' && 
-            <td>
-              <RatingDropdown initialRating={book.rating} handleRatingOption={event => updateRating(book.id, event.target.value)}/>
-            </td>
-          }
-          <td>
-            <div className={styles.buttons}>
-              <InfoButton handleClick={() => setInfoBook(book)}/>
-              <StatusButton handleClick={() => handleStatusButton(book)}/>
-              <RemoveButton handleClick={() => removeBook(book.id)}/>
-            </div>
-          </td>
-        </tr>
-      )
-    })
-  
-    
-    const [infoBook, setInfoBook] = useState(null); // InfoModal shows info for this book
-  
-    const updateRating = (id, newRating) => {
-      updateBook(id, {rating: newRating});
-    }
-  
+    // Array of book entries. Book entry = table row
+    const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => 
+      <BookEntry key={book.id} index={startIndex + index + 1} book={book} shelfName={shelfName} setInfoBook={setInfoBook} setStatusBook={setStatusBook} setMyBooks={setMyBooks}/>)
   
     return (
       <div className={styles.shelf}>
@@ -183,7 +144,7 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
           </tbody>
         </table>
         {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
-        {statusBook && <StatusModal book={statusBook} allBooks={allBooks} setAllBooks={setAllBooks} handleClose={() => setStatusBook(null)}/>}
+        {statusBook && <StatusModal book={statusBook} handleClose={() => setStatusBook(null)}/>}
       </div>
     )
   }
@@ -227,20 +188,4 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
   }
   
   
-  function RemoveButton({ handleClick }) {
-    return (
-      <button onClick={handleClick}>
-        <FontAwesomeIcon icon={faXmarkCircle}/>
-        Remove
-      </button>
-    )
-  }
   
-  
-  function StatusButton({ handleClick }) {
-    return (
-      <button onClick={handleClick}>
-        Status
-      </button>
-    )
-  }

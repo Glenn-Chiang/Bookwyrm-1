@@ -6,7 +6,7 @@ import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
 
 export default function MyBooks() {
-  const [myBooks, setAllBooks] = useState(JSON.parse(localStorage.getItem('myBooks')));
+  const [myBooks, setMyBooks] = useState([]);
   
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');
@@ -20,9 +20,9 @@ export default function MyBooks() {
       </h2>
       
       <div className={styles.shelves}>
-        <Shelf shelfName='read' shelfBooks={booksRead} allBooks={myBooks} setAllBooks={setAllBooks}/>
-        <Shelf shelfName='reading' shelfBooks={booksReading} allBooks={myBooks} setAllBooks={setAllBooks}/>
-        <Shelf shelfName='to-read' shelfBooks={booksToRead} allBooks={myBooks} setAllBooks={setAllBooks}/>
+        <Shelf shelfName='read' shelfBooks={booksRead} setMyBooks={setMyBooks}/>
+        <Shelf shelfName='reading' shelfBooks={booksReading} setMyBooks={setMyBooks}/>
+        <Shelf shelfName='to-read' shelfBooks={booksToRead} setMyBooks={setMyBooks}/>
       </div>
     </div>
   )
