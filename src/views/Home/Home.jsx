@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-const API_KEY = import.meta.env.VITE_API_KEY;
-
 import Pagination from "../../components/Pagination/Pagination";
 import AddBookButton from "../../components/AddBookButton/AddBookButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
@@ -10,57 +8,8 @@ import AddBookModal from "../../components/modals/AddBookModal/AddBookModal";
 import styles from './home.module.css'
 import { useEffect, useState } from 'react'
 
-async function fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder) {
-  try {
-    let response;
-
-    if (searchType === 'title') {
-      response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=intitle:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}&orderBy=${sortOrder}`
-      );
-    } else if (searchType === 'author') {
-      response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=inauthor:${searchTerms}&startIndex=${startIndex}&maxResults=${maxResults}`
-      );
-    }
-    
-    if (response.ok) {
-      const data = await response.json();
-      const results = data.totalItems ? data.items : []; 
-      return results;
-    }
-
-    else {
-      throw new Error('Error fetching books');
-    }
-  } catch(error) {
-    console.log(error);
-    throw error;
-  }
-
-}
-
-function getBooks(results) {
-  const books = results.map(result => {
-    const bookInfo = result.volumeInfo;
-    return {
-      id: result.id,
-      title: bookInfo.title,
-      authors: bookInfo.authors ? bookInfo.authors : ['-'], // No authors
-      coverImg: bookInfo.imageLinks ? bookInfo.imageLinks.thumbnail : '', // No image available
-      publisher: bookInfo.publisher ? bookInfo.publisher : '-', // No publisher
-      
-      categories: bookInfo.categories,
-      pageCount: bookInfo.pageCount,
-      description: bookInfo.description,
-      printType: bookInfo.printType,
-      publishedDate: bookInfo.publishedDate
-    }
-  })
-
-  return books;
-}
-
+import fetchResults from "./fetchResults";
+import getBooks from "./getBooks";
 
 function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults }) {
   const [searchType, setSearchType] = useState('title');
