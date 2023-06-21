@@ -1,5 +1,5 @@
 import titlecase from "../utility/titlecase";
-import auth from '../auth/authFunctions'
+import { auth } from '../firebase'
 import { db } from '../firebase'
 
 export default async function addBook(book) {

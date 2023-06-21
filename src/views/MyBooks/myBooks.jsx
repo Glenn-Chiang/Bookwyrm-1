@@ -1,12 +1,26 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styles from './myBooks.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
+import getBooks from "../../crudFunctions/getBooks"
 
 export default function MyBooks() {
   const [myBooks, setMyBooks] = useState([]);
+
+  // Retrieve user's books when the component mounts
+  useEffect(() => {
+    const fetchUserBooks = async () => {
+      try {
+        const userBooks = await getBooks();
+        setMyBooks(userBooks);
+      } catch (error) {
+        console.log('Error retrieving books: ', error);
+      }
+    };
+    fetchUserBooks();
+  }, []);
   
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');

@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 import titlecase from '../../../utility/titlecase'
 import getDate from '../../../utility/getDate'
-import addBook from '../../../userData/addBook'
+import addBook from '../../../crudFunctions/addBook'
 
 export default function AddBookModal({book, handleClose: closeModal}) {
   const [selectedStatus, setSelectedStatus] = useState('read');
