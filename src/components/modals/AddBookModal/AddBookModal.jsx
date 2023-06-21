@@ -8,7 +8,6 @@ import CloseButton from '../../CloseButton/CloseButton';
 import { useState } from 'react';
 
 import titlecase from '../../../utility/titlecase'
-import getDate from '../../../utility/getDate'
 import addBook from '../../../crudFunctions/addBook'
 
 export default function AddBookModal({book, handleClose: closeModal}) {
@@ -26,13 +25,13 @@ export default function AddBookModal({book, handleClose: closeModal}) {
     if (selectedStatus === 'read') {
       book.rating = rating;
     }
-    book.dateAdded = getDate();
+    book.dateAdded = new Date();
 
     try {
       await addBook(book);
       alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(selectedStatus)}' shelf!`);
     } catch (error) {
-      alert(error);
+      alert(error.message);
     }
 
     closeModal();

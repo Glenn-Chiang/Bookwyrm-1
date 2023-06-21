@@ -6,7 +6,7 @@ import InfoButton from "../../components/InfoButton/InfoButton"
 import updateBook from "../../crudFunctions/updateBook";
 import removeBook from "../../crudFunctions/removeBook";
 import getBooks from "../../crudFunctions/getBooks"
-
+import formatDate from "../../utility/formatDate"
 
 /* eslint-disable react/prop-types */
 export default function BookEntry({ book, index, shelfName, setInfoBook, setStatusBook, setMyBooks }) {
@@ -20,7 +20,7 @@ export default function BookEntry({ book, index, shelfName, setInfoBook, setStat
       </td>
       <td>{book.title}</td>
       <td>{book.authors.join(', ')}</td>
-      <td>{book.dateAdded}</td>
+      <td>{formatDate(book.dateAdded)}</td>
 
       {shelfName === 'read' &&
         <td>

@@ -23,5 +23,6 @@ export default async function addBook(book) {
 
     } catch (error) {
         console.log('Error adding book', error);
+        throw error;
     }
 }

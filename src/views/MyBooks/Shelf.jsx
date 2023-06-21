@@ -51,11 +51,11 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
     const filteredBooks = filterBooks(filterByCategory(shelfBooks));
     
     // Sorting
-    const [sortOrder, setSortOrder] = useState('oldToNew');
-    const sortedBooks = sortOrder === 'oldToNew'
-    ? filteredBooks    // Original array is already in order of oldToNew
-    : sortOrder === 'newToOld'
-    ? filteredBooks.slice().reverse()
+    const [sortOrder, setSortOrder] = useState('newToOld');
+    const sortedBooks = sortOrder === 'newToOld'
+    ? filteredBooks.slice().sort((a,b) => b.dateAdded - a.dateAdded)
+    : sortOrder === 'oldToNew'
+    ? filteredBooks.slice().sort((a,b) => a.dateAdded - b.dateAdded)
     : sortOrder === 'rating'
     ? filteredBooks.slice().sort((a,b) => b.rating - a.rating)
     : sortOrder === 'title'
@@ -177,8 +177,8 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
       <div className={styles.sortOrder}>
         Sort by
         <select defaultValue={sortOrder} onChange={onSelect}>
-          <option value='oldToNew'>Oldest</option>
           <option value='newToOld'>Newest</option>
+          <option value='oldToNew'>Oldest</option>
           <option value='rating'>Rating</option>
           <option value='author'>Author (A-Z)</option>
           <option value='title'>Title (A-Z)</option>

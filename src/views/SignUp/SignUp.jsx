@@ -25,7 +25,7 @@ export default function SignUp({ setView }) {
   )
 }
 
-const handleSubmit = async (event, email, password) => {
+const handleSubmit = async (email, password) => {
   try {
     await signUp(email, password);
   } catch (error) {

@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Profile.module.css'
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faLineChart, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import getBooks from '../../crudFunctions/getBooks';
 
 export default function Profile() {
   return (
@@ -28,7 +30,20 @@ const calcAverageRating = books => {
 }
 
 function Stats() {
-  const myBooks = JSON.parse(localStorage.getItem('myBooks'));
+  const [myBooks, setMyBooks] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const userBooks = await getBooks();
+        setMyBooks(userBooks)
+        console.log('Retrieved books')
+      } catch (error) {
+        console.log('Error fetching books', error);
+      }
+    })();
+  }, [])
+
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');
   const booksToRead = myBooks.filter(book => book.status === 'to-read');
