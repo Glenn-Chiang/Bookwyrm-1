@@ -1,6 +1,7 @@
 import titlecase from "../utility/titlecase";
 import { auth } from '../firebase'
 import { db } from '../firebase'
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export default async function addBook(book) {
     try {
@@ -9,21 +10,18 @@ export default async function addBook(book) {
             console.log('User not authenticated');
         }
 
-        const userBooksCollection = db.collection('userBooks'); // All books for all users
-        const userDocument = userBooksCollection.doc(user.uid);
-        const myBooks = userDocument.collection('myBooks'); // All books for this user
-        const querySnapshot = await myBooks.where('id', '===', book.id).get(); // Check if user already owns book
-
-        if (querySnapshot.empty) { // Add book if user does not already own it
-            await myBooks.add(book);
-            console.log('Book added')
+        const bookDocRef = doc(db, 'users', user.uid, 'books', book.id);
+        const bookDoc = await getDoc(bookDocRef);
+        if (bookDoc.exists()) { // User already owns book -> don't add
+            const bookObject = bookDoc.data();
+            throw new Error(`This book is already in your '${titlecase(bookObject.status)}' shelf!`);
         }
-        else { // Don't add book if user already owns it
-            const shelvedBook = await querySnapshot.docs[0].data(); // Get the book that the user already owns
-            throw new Error(`This book is already in your '${titlecase(shelvedBook.status)}' shelf!`)
+        else { 
+            await setDoc(bookDocRef, book);
+            console.log('Book added');
         }
 
     } catch (error) {
-        console.log('Error adding book');
+        console.log('Error adding book', error);
     }
 }

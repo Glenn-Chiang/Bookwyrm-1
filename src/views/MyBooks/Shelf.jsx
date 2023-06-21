@@ -144,7 +144,7 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
           </tbody>
         </table>
         {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
-        {statusBook && <StatusModal book={statusBook} handleClose={() => setStatusBook(null)}/>}
+        {statusBook && <StatusModal book={statusBook} handleClose={() => setStatusBook(null)} setBooks={setMyBooks}/>}
       </div>
     )
   }

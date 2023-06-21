@@ -8,7 +8,7 @@ export default function SignIn({ setView }) {
   const [password, setPassword] = useState('');
 
   return (
-    <form className={styles.form} onSubmit={() => handleSubmit(email, password)}>
+    <form className={styles.form} onSubmit={event => handleSubmit(event, email, password)}>
       <div>
         <label htmlFor='email'>Email</label>
         <input type='email' id='email' required onChange={event => setEmail(event.target.value)}/>
@@ -25,11 +25,12 @@ export default function SignIn({ setView }) {
   )
 }
 
-const handleSubmit = async (email, password) => {
-    try {
-        await signIn(email, password);
-    } catch (error) {
-        console.log('Error signing in: ' + error);
-    }
+const handleSubmit = (event, email, password) => {
+  event.preventDefault();
+  try {
+    signIn(email, password);
+  } catch (error) {
+    console.log('Error signing in:', error);
+  }
 }
 

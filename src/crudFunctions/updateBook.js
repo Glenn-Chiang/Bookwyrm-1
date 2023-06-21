@@ -1,3 +1,4 @@
+import { updateDoc, doc } from "firebase/firestore";
 import { auth, db } from "../firebase"
 
 export default async function updateBook(bookId, updatedData) {
@@ -8,11 +9,9 @@ export default async function updateBook(bookId, updatedData) {
             console.log('User not authenticated');
         }
 
-        const userBooksCollection = db.collection('userBooks'); // Books for all users
-        const userDocument = userBooksCollection.doc(user.uid);
-        const myBooks = userDocument.collection('myBooks'); // Books for this user
-        const myBook = myBooks.doc(bookId); // Get the book that we want to update
-        await myBook.update(updatedData); // Update specified properties
+        const bookDocRef = doc(db, 'users', user.uid, 'books', bookId);
+        await updateDoc(bookDocRef, updatedData);
+
         console.log('Book updated');
 
     } catch (error) {

@@ -1,34 +1,26 @@
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import createUserDoc from "../crudFunctions/createUserDoc";
 
 async function signUp(email, password) {
     try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const userId = userCredential.user.uid;
         
-        try {
-            createUserDocument(userId);
-            console.log('Signed up');
-        } catch (error) {
-            console.log('Error creating user document: ', error);
-        }
-
+        createUserDoc(userId);
+        console.log('Signed up');
+        
     } catch (error) {
         console.log('Error signing up: ', error);
     }
 }
 
-// When a user signs up, initialize an empty myBooks array mapped to that specific user
-const createUserDocument = userId => {
-    const userDocument = db.collection('userBooks').doc(userId);
-    const myBooks = [];
-    return userDocument.set({ myBooks });
-}
-
 
 async function signIn(email, password) {
     try {
-        await auth.signInWithEmailAndPassword(email, password);
-        console.timeLog('Signed in');
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log('Signed in');
     } catch (error) {
         console.log('Error signing in: ', error);
     }

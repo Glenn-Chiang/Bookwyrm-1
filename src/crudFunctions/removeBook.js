@@ -1,4 +1,5 @@
 import { auth, db } from "../firebase"
+import { doc, deleteDoc } from "firebase/firestore";
 
 export default async function removeBook(bookId) {
     try {
@@ -8,11 +9,8 @@ export default async function removeBook(bookId) {
             console.log('User not authenticated');
         }
 
-        const userBooksCollection = db.collection('userBooks');
-        const userDocument = userBooksCollection.doc(user.uid);
-        const myBooks = userDocument.collection('myBooks');
-        const myBook = myBooks.doc(bookId);
-        await myBook.delete();
+        const bookDocRef = doc(db, 'users', user.uid, 'books', bookId);
+        await deleteDoc(bookDocRef);
         console.log('Book removed');
 
     } catch (error) {

@@ -4,19 +4,19 @@ import styles from './Navbar.module.css'
 export default function Navbar({ currentView, handleClick }) {
   return (
     <ul className={styles.navbar}>
-      <li className={currentView === 'home' && styles.underlined} onClick={() => handleClick('home')}>
+      <li className={currentView === 'home' ? styles.underlined : undefined} onClick={() => handleClick('home')}>
         Home
       </li>
-      <li className={currentView === 'browse' && styles.underlined}  onClick={() => handleClick('browse')}>
+      <li className={currentView === 'browse' ? styles.underlined : undefined}  onClick={() => handleClick('browse')}>
         Browse
       </li>
-      <li className={currentView === 'myBooks' && styles.underlined} onClick={() => handleClick('myBooks')}>
+      <li className={currentView === 'myBooks' ? styles.underlined : undefined} onClick={() => handleClick('myBooks')}>
         My Books
       </li>
-      <li className={currentView === 'profile' && styles.underlined} onClick={() => handleClick('profile')}>
+      <li className={currentView === 'profile' ? styles.underlined : undefined} onClick={() => handleClick('profile')}>
         Profile
       </li>
-      <li className={(currentView === 'signIn' || currentView === 'signUp') && styles.underlined} onClick={() => handleClick('signIn')}>
+      <li className={(currentView === 'signIn' || currentView === 'signUp') ? styles.underlined : undefined} onClick={() => handleClick('signIn')}>
         Sign In
       </li>
     </ul>
