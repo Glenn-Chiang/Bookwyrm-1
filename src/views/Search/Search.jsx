@@ -5,11 +5,13 @@ import InfoButton from "../../components/InfoButton/InfoButton";
 import InfoModal from '../../components/modals/InfoModal/InfoModal'
 import AddBookModal from "../../components/modals/AddBookModal/AddBookModal";
 
-import styles from './home.module.css'
+import styles from './Search.module.css'
 import { useEffect, useState } from 'react'
 
 import fetchResults from "./fetchResults";
 import getBooks from "./getBooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults }) {
   const [searchType, setSearchType] = useState('title');
@@ -70,11 +72,15 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
 
   return (
     <form className={styles['search-form']} onSubmit={handleSearch}>
-      <h2>Search for a Book</h2>
+      <h2>
+        Search for a Book
+      </h2>
       <div>
         <div></div>
         <input id='search-bar' className={styles.searchbar} onChange={handleInputChange}></input>
-        <button className={styles.searchBtn} type='submit'>Search</button>
+        <button className={styles.searchBtn} type='submit'>
+          <FontAwesomeIcon icon={faSearch}/>
+        </button>
       </div>
       <p className={searchTerms ? styles.show : styles.hide}>{`Showing results for: "${searchTerms}"`}</p>
       <div className={styles.searchParams}>
@@ -134,7 +140,7 @@ function ResultsList({ results: books, setSelectedInfo, setSelectedAdd }) {
 }
 
 
-export default function Home() {
+export default function Search() {
   // const [searchType, setSearchType] = useState('Title');
   const [searchResults, setSearchResults] = useState([]);
   const [startIndex, setStartIndex] = useState(0);

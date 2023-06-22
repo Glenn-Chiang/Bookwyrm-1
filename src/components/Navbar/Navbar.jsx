@@ -4,8 +4,8 @@ import styles from './Navbar.module.css'
 export default function Navbar({ currentView, handleClick }) {
   return (
     <ul className={styles.navbar}>
-      <li className={currentView === 'home' ? styles.underlined : undefined} onClick={() => handleClick('home')}>
-        Home
+      <li className={currentView === 'search' ? styles.underlined : undefined} onClick={() => handleClick('search')}>
+        Search
       </li>
       <li className={currentView === 'browse' ? styles.underlined : undefined}  onClick={() => handleClick('browse')}>
         Browse

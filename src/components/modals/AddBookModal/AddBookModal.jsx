@@ -26,6 +26,7 @@ export default function AddBookModal({book, handleClose: closeModal}) {
       book.rating = rating;
     }
     book.dateAdded = new Date();
+    book.shelves = [];
 
     try {
       await addBook(book);
@@ -46,7 +47,7 @@ export default function AddBookModal({book, handleClose: closeModal}) {
       <div className={modalStyles.modalBox}>
         <CloseButton onClick={closeModal}/>
 
-        <h1 className={styles.header}>
+        <h1 className={modalStyles.header}>
           <FontAwesomeIcon icon={faCirclePlus}/>
           Add Book
         </h1>

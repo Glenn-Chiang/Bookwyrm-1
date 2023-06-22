@@ -18,7 +18,7 @@ export default function ShelvesModal({ book, handleClose: closeModal, setMyBooks
     })();
   }, [])
 
-  const [selectedShelves, setSelectedShelves] = useState(book.shelves);
+  const [selectedShelves, setSelectedShelves] = useState(book.shelves || []);
 
   const handleCheckboxChange = event => {
     const { value, checked } = event.target // Object destructuring

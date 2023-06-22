@@ -25,7 +25,8 @@ export default function SignIn({ setView }) {
   )
 }
 
-const handleSubmit = (email, password) => {
+const handleSubmit = (event, email, password) => {
+  event.preventDefault();
   try {
     signIn(email, password);
   } catch (error) {
