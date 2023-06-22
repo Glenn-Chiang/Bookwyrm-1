@@ -8,6 +8,9 @@ import Pagination from "../../components/Pagination/Pagination"
 import InfoModal from "../../components/modals/InfoModal/InfoModal"
 import StatusModal from "../../components/modals/StatusModal/StatusModal"
 import BookEntry from "./BookEntry";
+import Filter from "./Filter";
+import SortDropdown from "./SortDropdown";
+import ShelvesModal from "../../components/modals/ShelvesModal/ShelvesModal";
 
 export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
   
@@ -87,12 +90,12 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
     }
   
   
-    const [statusBook, setStatusBook] = useState(null); // Show status modal for this book
-    const [infoBook, setInfoBook] = useState(null); // Show info modal for this book
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [modal, setModal] = useState(null);
 
     // Array of book entries. Book entry = table row
     const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => 
-      <BookEntry key={book.id} index={startIndex + index + 1} book={book} shelfName={shelfName} setInfoBook={setInfoBook} setStatusBook={setStatusBook} setMyBooks={setMyBooks}/>)
+      <BookEntry key={book.id} index={startIndex + index + 1} book={book} shelfName={shelfName} setSelectedBook={setSelectedBook} setModal={setModal} setMyBooks={setMyBooks}/>)
   
     return (
       <div className={styles.shelf}>
@@ -143,49 +146,14 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
             
           </tbody>
         </table>
-        {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
-        {statusBook && <StatusModal book={statusBook} handleClose={() => setStatusBook(null)} setBooks={setMyBooks}/>}
+        {selectedBook && modal === 'info' && <InfoModal book={selectedBook} handleClose={() => setSelectedBook(null)}/>}
+        {selectedBook && modal === 'status' && <StatusModal book={selectedBook} handleClose={() => setSelectedBook(null)} setBooks={setMyBooks}/>}
+        {selectedBook && modal === 'addToShelf' && <ShelvesModal book={selectedBook} handleClose={() => setSelectedBook(null)} setMyBooks={setMyBooks}/>}
       </div>
     )
   }
   
   
-  function Filter({ onInputChange, onSelect }) {
-    const categories = ['all', 'fiction', 'philosophy', 'drama', 'poetry', 'history'];
-    const categoryOptions = categories.map((category, index) => {
-      return (
-        <option key={index} value={category}>{titlecase(category)}</option>
-      )
-    })
-    
-    return (
-      <div className={styles.filter}>
-        <input onChange={onInputChange} placeholder='Filter by title or author'/>
-        <div className={styles.category}>
-          Filter by category
-          <select onChange={onSelect}>
-            {categoryOptions}
-          </select>
-        </div>
-      </div>
-    )
-  }
-  
-  
-  function SortDropdown({sortOrder, onSelect}) {
-    return (
-      <div className={styles.sortOrder}>
-        Sort by
-        <select defaultValue={sortOrder} onChange={onSelect}>
-          <option value='newToOld'>Newest</option>
-          <option value='oldToNew'>Oldest</option>
-          <option value='rating'>Rating</option>
-          <option value='author'>Author (A-Z)</option>
-          <option value='title'>Title (A-Z)</option>
-        </select>
-      </div>
-    )
-  }
   
   
   

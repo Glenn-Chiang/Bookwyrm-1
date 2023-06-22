@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react"
 import styles from './myBooks.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBookReader } from "@fortawesome/free-solid-svg-icons"
+import { faBookReader, faPlusSquare } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
 import getBooks from "../../crudFunctions/getBooks"
+import AddShelfModal from "../../components/modals/AddShelfModal/AddShelfModal"
 
 export default function MyBooks() {
   const [myBooks, setMyBooks] = useState([]);
@@ -26,6 +27,8 @@ export default function MyBooks() {
   const booksReading = myBooks.filter(book => book.status === 'reading');
   const booksToRead = myBooks.filter(book => book.status === 'to-read');
 
+  const [showAddShelf, setShowAddShelf] = useState(false);
+
   return (
     <div className={styles.main}>
       <h2 className={styles.header}>
@@ -33,6 +36,15 @@ export default function MyBooks() {
         My Books
       </h2>
       
+      <div className={styles.addShelf}>
+        <button className={styles.addShelfBtn} onClick={() => setShowAddShelf(true)}>
+          Add a Shelf
+          <FontAwesomeIcon icon={faPlusSquare}/>
+        </button>
+      </div>
+
+      {showAddShelf && <AddShelfModal closeModal={() => setShowAddShelf(false)}/>}
+
       <div className={styles.shelves}>
         <Shelf shelfName='read' shelfBooks={booksRead} setMyBooks={setMyBooks}/>
         <Shelf shelfName='reading' shelfBooks={booksReading} setMyBooks={setMyBooks}/>

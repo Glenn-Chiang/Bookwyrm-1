@@ -1,4 +1,4 @@
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
+import { faBarsProgress, faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styles from './MyBooks.module.css'
 import RatingDropdown from "../../components/RatingDropdown/RatingDropdown"
@@ -9,7 +9,22 @@ import getBooks from "../../crudFunctions/getBooks"
 import formatDate from "../../utility/formatDate"
 
 /* eslint-disable react/prop-types */
-export default function BookEntry({ book, index, shelfName, setInfoBook, setStatusBook, setMyBooks }) {
+export default function BookEntry({ book, index, shelfName, setSelectedBook, setModal, setMyBooks }) {
+  const handleInfoClick = book => {
+    setSelectedBook(book);
+    setModal('info');
+  };
+  
+  const handleStatusClick = book => {
+    setSelectedBook(book);
+    setModal('status');
+  };
+
+  const handleShelfClick = book => {
+    setSelectedBook(book);
+    setModal('addToShelf');
+  }
+
   return (
     <tr key={book.id} className={styles.book}>
       <td>
@@ -29,17 +44,23 @@ export default function BookEntry({ book, index, shelfName, setInfoBook, setStat
       }
       <td>
         <div className={styles.buttons}>
-          <InfoButton handleClick={() => setInfoBook(book)} />
-          <StatusButton handleClick={() => setStatusBook(book)} />
+          <InfoButton handleClick={() => handleInfoClick(book)} /> {/** Show InfoModal for this book */}
+          <StatusButton handleClick={() => handleStatusClick(book)} /> {/** Show StatusModal for this book */}
           <RemoveButton handleClick={() => handleRemoveBook(book.id, setMyBooks)} />
+          { shelfName === 'read' && 
+            <ShelvesButton handleClick={() => handleShelfClick(book)}/> 
+          }
         </div>
       </td>
     </tr>
   )
 }
 
-
 const handleRemoveBook = async (bookId, setMyBooks) => {
+  const userResponse = confirm('This book will be deleted from all your shelves. Are you sure you want to proceed?');
+  if (!userResponse) {
+    return;
+  }
   try {
     await removeBook(bookId); // Remove book from db
     // Update local state with updated db data
@@ -63,11 +84,20 @@ const updateRating = async (bookId, newRating, setMyBooks) => {
 }
 
 
+function ShelvesButton( { handleClick }) {
+  return (
+    <button onClick={handleClick}>
+      {/* <FontAwesomeIcon icon={fabook}/> */}
+      Shelves
+    </button>
+  )
+}
+
 function RemoveButton({ handleClick }) {
   return (
     <button onClick={handleClick}>
       <FontAwesomeIcon icon={faXmarkCircle}/>
-      Remove
+      Delete
     </button>
   )
 }
@@ -76,6 +106,7 @@ function RemoveButton({ handleClick }) {
 function StatusButton({ handleClick }) {
   return (
     <button onClick={handleClick}>
+      <FontAwesomeIcon icon={faBarsProgress}/>
       Status
     </button>
   )

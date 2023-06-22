@@ -10,16 +10,10 @@ export default async function getBooks() {
         }
 
         const querySnapshot = await getDocs(collection(db, 'users', user.uid, 'books'));
-        if (!querySnapshot.empty) {
-            let userBooks = [];
-            querySnapshot.forEach(bookDoc => userBooks.push(bookDoc.data()));
-            console.log('Retrieved user books');
-            return userBooks;
-            
-        } else {
-            console.log('User does not have any books')
-            return [];
-        }
+        let userBooks = [];
+        querySnapshot.forEach(bookDoc => userBooks.push(bookDoc.data()));
+        console.log('Retrieved user books');
+        return userBooks;        
 
     } catch (error) {
         console.log('Error getting books:', error);

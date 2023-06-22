@@ -36,7 +36,7 @@ export default function StatusModal({ book, handleClose: closeModal, setBooks })
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles.modalBox}>
         <CloseButton onClick={closeModal} />
-        <h1 className={styles.header}>
+        <h1 className={modalStyles.header}>
           <FontAwesomeIcon icon={faBarsProgress} />
           Update Status
         </h1>
