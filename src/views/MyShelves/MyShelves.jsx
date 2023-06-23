@@ -29,18 +29,30 @@ export default function MyShelves() {
     })();
   }, [])
 
-  
-  const shelves = shelfNames.map((shelfName, index) => {
-    const shelfBooks = books.filter(book => book.shelves && book.shelves.includes(shelfName));
-    return (
-      <Shelf key={index} shelfName={shelfName} shelfBooks={shelfBooks} setMyBooks={setBooks}/>
-    )
-  })
 
+  // Which shelf to display on the page. When user clicks 'view shelf' button, that shelf will be displayed
+  const [displayedShelf, setDisplayedShelf] = useState(null);
+
+  // Hide or show AddShelf modal
   const [showAddShelf, setShowAddShelf] = useState(false);
 
   if (!auth.currentUser) {
     return <p>Sign in to view your shelves</p>
+  }
+
+  if (displayedShelf) {
+    const shelfBooks = books.filter(book => book.shelves && book.shelves.includes(displayedShelf));
+    return (
+      <>
+        <button className={styles.backBtn} onClick={() => setDisplayedShelf(null)}>
+          Back to My Shelves
+        </button>
+        <Shelf shelfName={displayedShelf} shelfBooks={shelfBooks} setMyBooks={setBooks}/>
+        <button className={styles.backBtn} onClick={() => setDisplayedShelf(null)}>
+          Back to My Shelves
+        </button>
+      </>
+    );
   }
 
   return (
@@ -64,11 +76,7 @@ export default function MyShelves() {
 
       {showAddShelf && <AddShelfModal shelfNames={shelfNames} closeModal={() => setShowAddShelf(false)}/>}
 
-      <ShelvesList books={books} shelfNames={shelfNames} />
-
-      <div className={styles.shelves}>
-        {shelves}
-      </div>
+      <ShelvesList books={books} shelfNames={shelfNames} setDisplayedShelf={setDisplayedShelf}/>
     </div>
   )
 }

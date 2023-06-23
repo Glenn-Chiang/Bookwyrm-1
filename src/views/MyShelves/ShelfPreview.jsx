@@ -2,7 +2,7 @@
 import titlecase from '../../utility/titlecase';
 import styles from './ShelfPreview.module.css'
 
-export default function ShelfPreview({ shelfName, books }) {
+export default function ShelfPreview({ shelfName, books, setDisplayedShelf }) {
   const previewBooks = books.sort((a,b) => b.dateAdded - a.dateAdded).slice(0,6);
   const listItems = previewBooks.map((book, index) => {
     return (
@@ -18,7 +18,9 @@ export default function ShelfPreview({ shelfName, books }) {
       <ul className={styles.books}>
         {listItems}
       </ul>
-      <button>View shelf</button>
+      <button onClick={() => setDisplayedShelf(shelfName)}>
+        View shelf
+      </button>
     </div>
   )
 }

@@ -23,17 +23,28 @@ export default function MyBooks() {
     };
     fetchUserBooks();
   }, []);
+
   
+  const [displayedShelf, setDisplayedShelf] = useState(null);
   
-  const booksRead = myBooks.filter(book => book.status === 'read');
-  const booksReading = myBooks.filter(book => book.status === 'reading');
-  const booksToRead = myBooks.filter(book => book.status === 'to-read');
-  
+  // Not signed in 
   if (!auth.currentUser) {
+    return (<p>Sign in to view your books</p>)
+  }
+
+  // Shelf displayed by clicking 'view shelf' button
+  if (displayedShelf) {
+    const shelfBooks = myBooks.filter(book => book.status === displayedShelf);
     return (
-      <p>
-        Sign in to view your books
-      </p>
+      <>
+        <button className={styles.backBtn} onClick={() => setDisplayedShelf(null)}>
+          Back to My Books
+        </button>
+        <Shelf shelfName={displayedShelf} shelfBooks={shelfBooks} setMyBooks={setMyBooks} />
+        <button className={styles.backBtn} onClick={() => setDisplayedShelf(null)}>
+          Back to My Books
+        </button>
+      </>
     )
   }
 
@@ -44,13 +55,7 @@ export default function MyBooks() {
         My Books
       </h2>
       
-      <ShelvesList books={myBooks} shelfNames={['read', 'reading', 'to-read']}/>
-
-      <div className={styles.shelves}>
-        <Shelf shelfName='read' shelfBooks={booksRead} setMyBooks={setMyBooks}/>
-        <Shelf shelfName='reading' shelfBooks={booksReading} setMyBooks={setMyBooks}/>
-        <Shelf shelfName='to-read' shelfBooks={booksToRead} setMyBooks={setMyBooks}/>
-      </div>
+      <ShelvesList books={myBooks} shelfNames={['read', 'reading', 'to-read']} setDisplayedShelf={setDisplayedShelf}/>
     </div>
   )
 }
