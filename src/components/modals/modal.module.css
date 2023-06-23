@@ -12,7 +12,7 @@
 }
 
 .modalBox {
-    position: relative;
+    position: absolute;
     width: 400px;
 
     background-color: white;

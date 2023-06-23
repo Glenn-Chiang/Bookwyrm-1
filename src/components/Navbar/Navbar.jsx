@@ -7,8 +7,8 @@ export default function Navbar({ currentView, handleClick }) {
       <li className={currentView === 'search' ? styles.underlined : undefined} onClick={() => handleClick('search')}>
         Search
       </li>
-      <li className={currentView === 'browse' ? styles.underlined : undefined}  onClick={() => handleClick('browse')}>
-        Browse
+      <li className={currentView === 'myShelves' ? styles.underlined : undefined}  onClick={() => handleClick('myShelves')}>
+        My Shelves
       </li>
       <li className={currentView === 'myBooks' ? styles.underlined : undefined} onClick={() => handleClick('myBooks')}>
         My Books

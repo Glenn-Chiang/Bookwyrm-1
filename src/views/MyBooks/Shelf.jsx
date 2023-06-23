@@ -100,9 +100,15 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
     return (
       <div className={styles.shelf}>
         <h3 className={styles.shelfHeader}>
-          <FontAwesomeIcon icon={shelfName === 'read' ? faCheckCircle : shelfName === 'reading' ? faBookBookmark : faCalendarPlus}/>
+          {
+            ['read', 'reading', 'to-read'].includes(shelfName) &&
+            <FontAwesomeIcon icon={shelfName === 'read' ? faCheckCircle : shelfName === 'reading' ? faBookBookmark : faCalendarPlus}/>
+          }
           {titlecase(shelfName)}
         </h3>
+        <p>
+          ({shelfBooks.length} {shelfBooks.length === 1 ? 'book' : 'books'})
+        </p>
   
         <div className={styles.tableOptions}>
           <Filter onInputChange={handleInputChange} onSelect={handleSelectCategory}/>
@@ -129,7 +135,7 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
               <FontAwesomeIcon icon={faCalendarDay}/>
                 Date added
               </th>
-              {shelfName === 'read' && 
+              {(shelfName !== 'reading' && shelfName !== 'to-read') && 
                 <th>
                   <FontAwesomeIcon icon={faStar}/>
                   Rating
@@ -140,7 +146,7 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
           </thead>
           <tbody>
           {displayedBooks.length === 0 
-            ? <tr><td colSpan={shelfName === 'read' ? 7 : 6}>No books found</td></tr>
+            ? <tr><td colSpan={(shelfName !== 'reading' && shelfName !== 'to-read') ? 7 : 6}>No books found</td></tr>
             : displayedBooks
           }
             

@@ -37,7 +37,7 @@ export default function BookEntry({ book, index, shelfName, setSelectedBook, set
       <td>{book.authors.join(', ')}</td>
       <td>{formatDate(book.dateAdded)}</td>
 
-      {shelfName === 'read' &&
+      {shelfName !== 'reading' && shelfName !== 'to-read' &&
         <td>
           <RatingDropdown initialRating={book.rating} handleRatingOption={event => updateRating(book.id, event.target.value, setMyBooks)} />
         </td>
@@ -46,10 +46,10 @@ export default function BookEntry({ book, index, shelfName, setSelectedBook, set
         <div className={styles.buttons}>
           <InfoButton handleClick={() => handleInfoClick(book)} /> {/** Show InfoModal for this book */}
           <StatusButton handleClick={() => handleStatusClick(book)} /> {/** Show StatusModal for this book */}
-          <RemoveButton handleClick={() => handleRemoveBook(book.id, setMyBooks)} />
-          { shelfName === 'read' && 
+          { shelfName !== 'reading' && shelfName !== 'to-read' && 
             <ShelvesButton handleClick={() => handleShelfClick(book)}/> 
           }
+          <RemoveButton handleClick={() => handleRemoveBook(book.id, setMyBooks)} />
         </div>
       </td>
     </tr>
