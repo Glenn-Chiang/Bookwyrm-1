@@ -1,6 +1,5 @@
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import createUserDoc from "../crudFunctions/createUserDoc";
 
 async function signUp(email, password) {
@@ -27,13 +26,13 @@ async function signIn(email, password) {
 }
 
 
-async function signOut() {
+async function signOutUser() {
     try {
-        await auth.signOut();
+        await signOut(auth);
         console.log('Signed out');
     } catch (error) {
         console.log('Error signing out: ', error);
     }
 }
 
-export { signUp, signIn, signOut };
+export { signUp, signIn, signOutUser };

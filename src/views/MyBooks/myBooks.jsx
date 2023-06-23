@@ -6,10 +6,11 @@ import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
 import getBooks from "../../crudFunctions/getBooks"
 import ShelvesList from "../MyShelves/ShelvesList"
+import { auth } from "../../firebase"
 
 export default function MyBooks() {
   const [myBooks, setMyBooks] = useState([]);
-
+  
   // Retrieve user's books when the component mounts
   useEffect(() => {
     const fetchUserBooks = async () => {
@@ -23,10 +24,18 @@ export default function MyBooks() {
     fetchUserBooks();
   }, []);
   
+  
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');
   const booksToRead = myBooks.filter(book => book.status === 'to-read');
-
+  
+  if (!auth.currentUser) {
+    return (
+      <p>
+        Sign in to view your books
+      </p>
+    )
+  }
 
   return (
     <div className={styles.main}>

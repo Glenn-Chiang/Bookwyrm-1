@@ -3,8 +3,15 @@ import styles from './Profile.module.css'
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faLineChart, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import getBooks from '../../crudFunctions/getBooks';
+import { auth } from '../../firebase';
 
 export default function Profile() {
+  if (!auth.currentUser) {
+    return (
+      <p>Sign in to view your profile</p>
+    )
+  }
+  
   return (
     <>
       <h2 className={styles.header}>

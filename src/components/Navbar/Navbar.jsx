@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { auth } from '../../firebase'
 import styles from './Navbar.module.css'
 
 export default function Navbar({ currentView, handleClick }) {
@@ -16,9 +17,14 @@ export default function Navbar({ currentView, handleClick }) {
       <li className={currentView === 'profile' ? styles.underlined : undefined} onClick={() => handleClick('profile')}>
         Profile
       </li>
-      <li className={(currentView === 'signIn' || currentView === 'signUp') ? styles.underlined : undefined} onClick={() => handleClick('signIn')}>
-        Sign In
-      </li>
+      { auth.currentUser ?
+        <li className={currentView === 'signOut' ? styles.underlined : undefined} onClick={() => handleClick('signOut')}>
+          Sign Out
+        </li> :
+        <li className={(currentView === 'signIn' || currentView === 'signUp') ? styles.underlined : undefined} onClick={() => handleClick('signIn')}>
+          Sign In
+        </li>
+      }
     </ul>
   )
 }

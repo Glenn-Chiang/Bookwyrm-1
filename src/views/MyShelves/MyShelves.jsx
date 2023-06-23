@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import AddShelfModal from "../../components/modals/AddShelfModal/AddShelfModal";
 import ShelvesList from "./ShelvesList";
+import { auth } from "../../firebase";
 
 export default function MyShelves() {
   const [books, setBooks] = useState([]);
@@ -37,6 +38,10 @@ export default function MyShelves() {
   })
 
   const [showAddShelf, setShowAddShelf] = useState(false);
+
+  if (!auth.currentUser) {
+    return <p>Sign in to view your shelves</p>
+  }
 
   return (
     <div>
