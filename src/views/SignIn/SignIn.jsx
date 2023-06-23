@@ -25,10 +25,10 @@ export default function SignIn({ setView }) {
   )
 }
 
-const handleSubmit = (event, email, password, setView) => {
+const handleSubmit = async (event, email, password, setView) => {
   event.preventDefault();
   try {
-    signIn(email, password);
+    await signIn(email, password);
     setView('myBooks');
   } catch (error) {
     console.log('Error signing in:', error);

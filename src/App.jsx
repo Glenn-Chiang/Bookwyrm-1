@@ -13,7 +13,7 @@ import SignOut from './views/SignOut/SignOut.jsx';
 export default function App() {
   const [view, setView] = useState('myBooks');
 
-  const currentPage = view === 'search' ? <Search/> : view === 'myShelves' ? <MyShelves/> : view === 'myBooks' ? <MyBooks/> : view === 'profile' ? <Profile/> : view === 'signIn' ? <SignIn setView={setView}/> : view === 'signUp' ? <SignUp setView={setView}/> : <SignOut/>
+  const currentPage = view === 'search' ? <Search/> : view === 'myShelves' ? <MyShelves/> : view === 'myBooks' ? <MyBooks/> : view === 'profile' ? <Profile/> : view === 'signIn' ? <SignIn setView={setView}/> : view === 'signUp' ? <SignUp setView={setView}/> : <SignOut setView={setView}/>
 
   return (
     <>
