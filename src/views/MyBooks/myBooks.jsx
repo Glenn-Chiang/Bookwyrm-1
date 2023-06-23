@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
 import getBooks from "../../crudFunctions/getBooks"
+import ShelvesList from "../MyShelves/ShelvesList"
 
 export default function MyBooks() {
   const [myBooks, setMyBooks] = useState([]);
@@ -34,6 +35,8 @@ export default function MyBooks() {
         My Books
       </h2>
       
+      <ShelvesList books={myBooks} shelfNames={['read', 'reading', 'to-read']}/>
+
       <div className={styles.shelves}>
         <Shelf shelfName='read' shelfBooks={booksRead} setMyBooks={setMyBooks}/>
         <Shelf shelfName='reading' shelfBooks={booksReading} setMyBooks={setMyBooks}/>

@@ -14,10 +14,11 @@ export default function ShelfPreview({ shelfName, books }) {
 
   return (
     <div className={styles.container}>
-      {titlecase(shelfName)}
+      {titlecase(shelfName)} ({books.length} {books.length === 1 ? 'book' : 'books'})
       <ul className={styles.books}>
         {listItems}
       </ul>
+      <button>View shelf</button>
     </div>
   )
 }

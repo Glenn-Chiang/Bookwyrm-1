@@ -40,19 +40,21 @@ export default function MyShelves() {
 
   return (
     <div>
-      <h2 className={styles.header}>
-        My Shelves
-      </h2>
+      <div className={styles.header}>
+        <h2>
+          My Shelves
+        </h2>
 
-      <p>
-        Create custom shelves to organise books that you have read
-      </p>
+        <p>
+          Create custom shelves to organise books that you have read
+        </p>
 
-      <div className={styles.addShelf}>
-        <button className={styles.addShelfBtn} onClick={() => setShowAddShelf(true)}>
-          Add a Shelf
-          <FontAwesomeIcon icon={faPlusSquare}/>
-        </button>
+        <div className={styles.addShelf}>
+          <button className={styles.addShelfBtn} onClick={() => setShowAddShelf(true)}>
+            Add a Shelf
+            <FontAwesomeIcon icon={faPlusSquare}/>
+          </button>
+        </div>
       </div>
 
       {showAddShelf && <AddShelfModal shelfNames={shelfNames} closeModal={() => setShowAddShelf(false)}/>}
