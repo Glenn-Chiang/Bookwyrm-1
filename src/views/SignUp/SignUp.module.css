@@ -1,0 +1,32 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    justify-content: center;
+    gap: 20px;
+    width: 400px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.form input {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    width: 250px;
+}
+
+.form div {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form p {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}

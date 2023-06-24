@@ -1,0 +1,11 @@
+.container {
+    padding: 20px;
+}
+
+.books {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    gap: 10px;
+    padding-left: 0;
+}

@@ -3,50 +3,39 @@ import styles from './AddBookModal.module.css'
 import modalStyles from '../modal.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-// import InfoButton from '../../InfoButton/InfoButton';
 import RatingDropdown from '../../RatingDropdown/RatingDropdown';
+import CloseButton from '../../CloseButton/CloseButton';
 import { useState } from 'react';
+
 import titlecase from '../../../utility/titlecase'
 import getDate from '../../../utility/getDate'
-import CloseButton from '../../CloseButton/CloseButton';
+import addBook from '../../../userData/addBook'
 
 export default function AddBookModal({book, handleClose: closeModal}) {
-  const myBooks = JSON.parse(localStorage.getItem('myBooks'));
-
   const [selectedStatus, setSelectedStatus] = useState('read');
   const [rating, setRating] = useState(10);
 
   const handleRatingOption = event => {
     setRating(event.target.value);
   }
-
-  const addBook = () => {
-    const myBook = myBooks.find(myBook => myBook.id === book.id); // Check if user already owns book
-    if (myBook) {
-      alert(`This book is already in your '${titlecase(myBook.status)}' shelf!`)  
-      closeModal();
-      return;
-    }
-    
-    book.status = selectedStatus;
   
+  const handleSubmit = async event => { // Confirm add book to myBooks
+    event.preventDefault();
+    // Update book properties
+    book.status = selectedStatus;  
     if (selectedStatus === 'read') {
       book.rating = rating;
     }
-  
     book.dateAdded = getDate();
-  
-    myBooks.push(book);
-    localStorage.setItem('myBooks', JSON.stringify(myBooks));
-  
-    alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(selectedStatus)}' shelf!`);
-  
-    closeModal();
-  }
 
-  const handleSubmit = event => { // Confirm add book to myBooks
-    event.preventDefault();
-    addBook();
+    try {
+      await addBook(book);
+      alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(selectedStatus)}' shelf!`);
+    } catch (error) {
+      alert(error);
+    }
+
+    closeModal();
   }
 
   const handleStatusChange = event => {
