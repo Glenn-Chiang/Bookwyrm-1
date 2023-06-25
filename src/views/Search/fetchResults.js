@@ -1,4 +1,4 @@
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY; // Google Books API key
 
 export default async function fetchResults(searchType, searchTerms, startIndex, maxResults, sortOrder) {
     try {
@@ -16,7 +16,7 @@ export default async function fetchResults(searchType, searchTerms, startIndex, 
         throw new Error('Error fetching books');
       }
     } catch(error) {
-      console.log(error);
+      console.log('Error fetching books', error);
       throw error;
     }
   

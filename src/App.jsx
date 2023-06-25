@@ -1,32 +1,24 @@
 // import styles from './App.module.css';
-// const API_KEY = import.meta.env.VITE_API_KEY;
-import { useEffect, useState } from 'react';
-import Home from './views/Home/home.jsx';
+import { useState } from 'react';
+import Search from './views/Search/Search.jsx';
 import MyBooks from './views/MyBooks/myBooks.jsx';
 import Profile from './views/Profile/Profile.jsx';
 import Banner from './components/Banner/Banner.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
+import SignIn from './views/SignIn/SignIn.jsx';
+import SignUp from './views/SignUp/SignUp.jsx';
+import MyShelves from './views/MyShelves/MyShelves.jsx';
+import SignOut from './views/SignOut/SignOut.jsx';
 
 export default function App() {
-  const [view, setView] = useState('home');
+  const [view, setView] = useState('myBooks');
 
-  const currentPage = view === 'home' ? <Home/> : view === 'myBooks' ? <MyBooks/> : <Profile/>
-
-  useEffect(() => {
-    if (localStorage.getItem('myBooks')) {
-      return;
-    }
-
-    const myBooks = []
-
-    localStorage.setItem('myBooks', JSON.stringify(myBooks));
-    
-  }, []) // Empty dependency array so that effect only runs once on initial render
+  const currentPage = view === 'search' ? <Search/> : view === 'myShelves' ? <MyShelves/> : view === 'myBooks' ? <MyBooks/> : view === 'profile' ? <Profile/> : view === 'signIn' ? <SignIn setView={setView}/> : view === 'signUp' ? <SignUp setView={setView}/> : <SignOut setView={setView}/>
 
   return (
     <>
       <Banner/>
-      <Navbar handleClick={setView}/>
+      <Navbar currentView={view} handleClick={setView}/>
       {currentPage}
     </>
   )

@@ -1,7 +1,9 @@
-export default function getDate() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+export default function formatDate(timestamp) {
+    // console.log(date.toDate())
+    const date = timestamp.toDate();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear());
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
 }

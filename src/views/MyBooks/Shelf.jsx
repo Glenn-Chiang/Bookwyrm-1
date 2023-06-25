@@ -3,16 +3,16 @@ import { useState } from "react";
 import styles from './myBooks.module.css'
 import titlecase from "../../utility/titlecase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBookBookmark, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser, faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
-import RatingDropdown from "../../components/RatingDropdown/RatingDropdown"
+import { faBookBookmark, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
 import Pagination from "../../components/Pagination/Pagination"
-import InfoButton from "../../components/InfoButton/InfoButton"
 import InfoModal from "../../components/modals/InfoModal/InfoModal"
 import StatusModal from "../../components/modals/StatusModal/StatusModal"
-import updateBook from "../../crudFunctions/updateBook";
-import removeBook from "../../crudFunctions/removeBook";
+import BookEntry from "./BookEntry";
+import Filter from "./Filter";
+import SortDropdown from "./SortDropdown";
+import ShelvesModal from "../../components/modals/ShelvesModal/ShelvesModal";
 
-export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
+export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
   
     // Filter by category; show all books by default
     const [category, setCategory] = useState('all');
@@ -54,11 +54,11 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     const filteredBooks = filterBooks(filterByCategory(shelfBooks));
     
     // Sorting
-    const [sortOrder, setSortOrder] = useState('oldToNew');
-    const sortedBooks = sortOrder === 'oldToNew'
-    ? filteredBooks    // Original array is already in order of oldToNew
-    : sortOrder === 'newToOld'
-    ? filteredBooks.slice().reverse()
+    const [sortOrder, setSortOrder] = useState('newToOld');
+    const sortedBooks = sortOrder === 'newToOld'
+    ? filteredBooks.slice().sort((a,b) => b.dateAdded - a.dateAdded)
+    : sortOrder === 'oldToNew'
+    ? filteredBooks.slice().sort((a,b) => a.dateAdded - b.dateAdded)
     : sortOrder === 'rating'
     ? filteredBooks.slice().sort((a,b) => b.rating - a.rating)
     : sortOrder === 'title'
@@ -90,55 +90,25 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
     }
   
   
-    const [statusBook, setStatusBook] = useState(null); // Show status modal for this book
-    const handleStatusButton = book => { // Show the updateStatus modal for this book
-      setStatusBook(book);
-    }
-  
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [modal, setModal] = useState(null);
 
-    const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => {
-      return (
-        <tr key={book.id} className={styles.book}>
-          <td>
-            {startIndex + index + 1}
-          </td>
-          <td>
-            <img src={book.coverImg}></img>
-          </td>
-          <td>{book.title}</td>
-          <td>{book.authors.join(', ')}</td>
-          <td>{book.dateAdded}</td>
-  
-          {shelfName === 'read' && 
-            <td>
-              <RatingDropdown initialRating={book.rating} handleRatingOption={event => updateRating(book.id, event.target.value)}/>
-            </td>
-          }
-          <td>
-            <div className={styles.buttons}>
-              <InfoButton handleClick={() => setInfoBook(book)}/>
-              <StatusButton handleClick={() => handleStatusButton(book)}/>
-              <RemoveButton handleClick={() => removeBook(book.id)}/>
-            </div>
-          </td>
-        </tr>
-      )
-    })
-  
-    
-    const [infoBook, setInfoBook] = useState(null); // InfoModal shows info for this book
-  
-    const updateRating = async (id, newRating) => {
-      await updateBook(id, {rating: newRating});
-    }
-  
+    // Array of book entries. Book entry = table row
+    const displayedBooks = sortedBooks.slice(startIndex, startIndex + booksPerPage).map((book, index) => 
+      <BookEntry key={book.id} index={startIndex + index + 1} book={book} shelfName={shelfName} setSelectedBook={setSelectedBook} setModal={setModal} setMyBooks={setMyBooks}/>)
   
     return (
       <div className={styles.shelf}>
         <h3 className={styles.shelfHeader}>
-          <FontAwesomeIcon icon={shelfName === 'read' ? faCheckCircle : shelfName === 'reading' ? faBookBookmark : faCalendarPlus}/>
+          {
+            ['read', 'reading', 'to-read'].includes(shelfName) &&
+            <FontAwesomeIcon icon={shelfName === 'read' ? faCheckCircle : shelfName === 'reading' ? faBookBookmark : faCalendarPlus}/>
+          }
           {titlecase(shelfName)}
         </h3>
+        <p>
+          ({shelfBooks.length} {shelfBooks.length === 1 ? 'book' : 'books'})
+        </p>
   
         <div className={styles.tableOptions}>
           <Filter onInputChange={handleInputChange} onSelect={handleSelectCategory}/>
@@ -165,7 +135,7 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
               <FontAwesomeIcon icon={faCalendarDay}/>
                 Date added
               </th>
-              {shelfName === 'read' && 
+              {(shelfName !== 'reading' && shelfName !== 'to-read') && 
                 <th>
                   <FontAwesomeIcon icon={faStar}/>
                   Rating
@@ -176,71 +146,20 @@ export default function Shelf({shelfName, shelfBooks, allBooks, setAllBooks}) {
           </thead>
           <tbody>
           {displayedBooks.length === 0 
-            ? <tr><td colSpan={shelfName === 'read' ? 7 : 6}>No books found</td></tr>
+            ? <tr><td colSpan={(shelfName !== 'reading' && shelfName !== 'to-read') ? 7 : 6}>No books found</td></tr>
             : displayedBooks
           }
             
           </tbody>
         </table>
-        {infoBook && <InfoModal book={infoBook} handleClose={() => setInfoBook(null)}/>}
-        {statusBook && <StatusModal book={statusBook} allBooks={allBooks} setAllBooks={setAllBooks} handleClose={() => setStatusBook(null)}/>}
+        {selectedBook && modal === 'info' && <InfoModal book={selectedBook} handleClose={() => setSelectedBook(null)}/>}
+        {selectedBook && modal === 'status' && <StatusModal book={selectedBook} handleClose={() => setSelectedBook(null)} setBooks={setMyBooks}/>}
+        {selectedBook && modal === 'addToShelf' && <ShelvesModal book={selectedBook} handleClose={() => setSelectedBook(null)} setMyBooks={setMyBooks}/>}
       </div>
     )
   }
   
   
-  function Filter({ onInputChange, onSelect }) {
-    const categories = ['all', 'fiction', 'philosophy', 'drama', 'poetry', 'history'];
-    const categoryOptions = categories.map((category, index) => {
-      return (
-        <option key={index} value={category}>{titlecase(category)}</option>
-      )
-    })
-    
-    return (
-      <div className={styles.filter}>
-        <input onChange={onInputChange} placeholder='Filter by title or author'/>
-        <div className={styles.category}>
-          Filter by category
-          <select onChange={onSelect}>
-            {categoryOptions}
-          </select>
-        </div>
-      </div>
-    )
-  }
   
   
-  function SortDropdown({sortOrder, onSelect}) {
-    return (
-      <div className={styles.sortOrder}>
-        Sort by
-        <select defaultValue={sortOrder} onChange={onSelect}>
-          <option value='oldToNew'>Oldest</option>
-          <option value='newToOld'>Newest</option>
-          <option value='rating'>Rating</option>
-          <option value='author'>Author (A-Z)</option>
-          <option value='title'>Title (A-Z)</option>
-        </select>
-      </div>
-    )
-  }
   
-  
-  function RemoveButton({ handleClick }) {
-    return (
-      <button onClick={handleClick}>
-        <FontAwesomeIcon icon={faXmarkCircle}/>
-        Remove
-      </button>
-    )
-  }
-  
-  
-  function StatusButton({ handleClick }) {
-    return (
-      <button onClick={handleClick}>
-        Status
-      </button>
-    )
-  }

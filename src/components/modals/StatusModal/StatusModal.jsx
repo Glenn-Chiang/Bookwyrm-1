@@ -7,9 +7,9 @@ import { useState } from 'react';
 import CloseButton from '../../CloseButton/CloseButton'
 import updateBook from '../../../crudFunctions/updateBook'
 import titlecase from '../../../utility/titlecase'
-import getDate from '../../../utility/getDate'
+import getBooks from '../../../crudFunctions/getBooks';
 
-export default function StatusModal({ book, handleClose: closeModal }) {
+export default function StatusModal({ book, handleClose: closeModal, setBooks }) {
 
   const [selectedStatus, setSelectedStatus] = useState(book.status);
 
@@ -19,9 +19,12 @@ export default function StatusModal({ book, handleClose: closeModal }) {
       closeModal();
       return;
     }
-    
-    await updateBook(book.id, {dateAdded: getDate(), status: selectedStatus});
+    // Update database
+    await updateBook(book.id, {dateAdded: new Date(), status: selectedStatus});
     alert(`${book.title} by ${book.authors[0]} has been moved to your '${titlecase(selectedStatus)}' shelf!`)
+    // Update local state
+    const updatedBooks = await getBooks();
+    setBooks(updatedBooks);
     closeModal();
   }
 
@@ -33,7 +36,7 @@ export default function StatusModal({ book, handleClose: closeModal }) {
     <div className={modalStyles.modalBackground}>
       <div className={modalStyles.modalBox}>
         <CloseButton onClick={closeModal} />
-        <h1 className={styles.header}>
+        <h1 className={modalStyles.header}>
           <FontAwesomeIcon icon={faBarsProgress} />
           Update Status
         </h1>
