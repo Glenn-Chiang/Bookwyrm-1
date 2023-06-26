@@ -22,6 +22,10 @@
     align-items: center;
 }
 
+.info {
+    overflow-y: scroll;
+}
+
 .info p {
     display: flex;
     justify-content: space-between;

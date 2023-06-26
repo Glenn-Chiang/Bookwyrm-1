@@ -28,7 +28,7 @@
     /* overflow-y: scroll; */
     /* overflow-x: hidden; */
     position: relative;
-    width: 80%;
+    width: 800px;
     max-height: 90vh;
 
     background-color: white;
@@ -48,24 +48,4 @@
     gap: 10px;
 }
 
-
-.modalBox-scrollable::-webkit-scrollbar {
-    border-radius: 10px;
-}
-
-.modalBox-scrollable::-webkit-scrollbar-button {
-    height: 10px;
-}
-
-.modalBox-scrollable::-webkit-scrollbar-track {
-    border-radius: 10px;
-}
-
-.modalBox-scrollable::-webkit-scrollbar-corner {
-
-}
-
-.modalBox-scrollable::-webkit-scrollbar-thumb {
-    background-color: lightblue;
-}
 
