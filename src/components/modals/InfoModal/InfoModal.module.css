@@ -38,11 +38,12 @@
 p.description {
     flex-direction: column;
     gap: 10px;
-    
+    align-items: flex-start;
 }
 
 p.description :last-child {
     line-height: 2;
+    text-align: left;
 }
 
 
