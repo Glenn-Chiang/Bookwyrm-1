@@ -8,11 +8,11 @@ export default function getBooks(results) {
         coverImg: bookInfo.imageLinks ? bookInfo.imageLinks.thumbnail : '', // No image available
         publisher: bookInfo.publisher ? bookInfo.publisher : '-', // No publisher
         
-        categories: bookInfo.categories,
-        pageCount: bookInfo.pageCount,
-        description: bookInfo.description,
-        printType: bookInfo.printType,
-        publishedDate: bookInfo.publishedDate
+        categories: bookInfo.categories ? bookInfo.categories : [],
+        pageCount: bookInfo.pageCount ? bookInfo.pageCount : null,
+        description: bookInfo.description ? bookInfo.description : '',
+        printType: bookInfo.printType ? bookInfo.printType : null,
+        publishedDate: bookInfo.publishedDate ? bookInfo.publishedDate : null
       }
     })
   

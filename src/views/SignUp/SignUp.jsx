@@ -8,7 +8,7 @@ export default function SignUp({ setView }) {
   const [password, setPassword] = useState('');
 
   return (
-    <form className={styles.form} onSubmit={event => handleSubmit(event, email, password)}>
+    <form className={styles.form} onSubmit={event => handleSubmit(event, email, password, setView)}>
       <div>
         <label htmlFor='email'>Email</label>
         <input type='email' id='email' required onChange={event => setEmail(event.target.value)}/>
@@ -25,11 +25,13 @@ export default function SignUp({ setView }) {
   )
 }
 
-const handleSubmit = async (event, email, password) => {
+const handleSubmit = async (event, email, password, setView) => {
   event.preventDefault();
   try {
     await signUp(email, password);
     console.log('Signed up');
+    alert('Signed up successfully!');
+    setView('signIn');
   } catch (error) {
     console.log('Error signing up: ' + error);
   }
