@@ -29,6 +29,7 @@ const handleSubmit = async (event, email, password) => {
   event.preventDefault();
   try {
     await signUp(email, password);
+    console.log('Signed up');
   } catch (error) {
     console.log('Error signing up: ' + error);
   }
