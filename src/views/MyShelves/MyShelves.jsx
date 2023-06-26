@@ -25,7 +25,9 @@ export default function MyShelves() {
   useEffect(() => {
     (async () => {
       const userShelves = await getShelves();
-      setShelfNames(userShelves);
+      if (userShelves) {
+        setShelfNames(userShelves);
+      }
     })();
   }, [])
 
@@ -74,9 +76,10 @@ export default function MyShelves() {
         </div>
       </div>
 
-      {showAddShelf && <AddShelfModal shelfNames={shelfNames} closeModal={() => setShowAddShelf(false)}/>}
+      { showAddShelf && <AddShelfModal shelfNames={shelfNames} setShelfNames={setShelfNames} closeModal={() => setShowAddShelf(false)}/>}
 
-      <ShelvesList books={books} shelfNames={shelfNames} setDisplayedShelf={setDisplayedShelf}/>
+      { shelfNames && <ShelvesList books={books} shelfNames={shelfNames} setDisplayedShelf={setDisplayedShelf}/> }
+
     </div>
   )
 }

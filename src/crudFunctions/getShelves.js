@@ -11,13 +11,8 @@ export default async function getShelves() {
         } 
 
         const userDoc = await getDoc(doc(db, 'users', user.uid));
-        try {
-            const userShelves = userDoc.data().shelves;
-            return userShelves;
-        } catch (error) {
-            console.log('User has not created any shelves')
-            return [];
-        }
+        const userShelves = userDoc.data().shelves;
+        return userShelves;    
 
     } catch (error) {
         console.log('Error getting shelves:', error);

@@ -6,12 +6,24 @@ import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "./Shelf"
 import getBooks from "../../crudFunctions/getBooks"
 import ShelvesList from "../MyShelves/ShelvesList"
+import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../../firebase"
+// import { auth } from "../../firebase"
 
 export default function MyBooks() {
-  const [myBooks, setMyBooks] = useState([]);
   
+    const [authenticated, setAuthenticated] = useState(false);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+      }
+    })
+
+    
   // Retrieve user's books when the component mounts
+  const [myBooks, setMyBooks] = useState([]);
   useEffect(() => {
     const fetchUserBooks = async () => {
       try {
@@ -22,13 +34,13 @@ export default function MyBooks() {
       }
     };
     fetchUserBooks();
-  }, []);
+  }, [authenticated]);
 
   
   const [displayedShelf, setDisplayedShelf] = useState(null);
   
   // Not signed in 
-  if (!auth.currentUser) {
+  if (!authenticated) {
     return (<p>Sign in to view your books</p>)
   }
 

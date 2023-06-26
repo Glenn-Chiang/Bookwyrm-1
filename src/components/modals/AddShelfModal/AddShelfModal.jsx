@@ -7,13 +7,14 @@ import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import createShelf from '../../../crudFunctions/createShelf'
+import getShelves from '../../../crudFunctions/getShelves'
 
-export default function AddShelfModal({ shelfNames, closeModal }) {
+export default function AddShelfModal({ shelfNames, setShelfNames, closeModal }) {
   const [shelfName, setShelfName] = useState('');
   const validName = !['read', 'reading', 'to-read'].includes(shelfName.toLowerCase());
   const nameInUse = shelfNames.includes(shelfName.toLowerCase());
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     if (!validName || nameInUse) {
@@ -23,6 +24,8 @@ export default function AddShelfModal({ shelfNames, closeModal }) {
     try {
       createShelf(shelfName);
       alert(`New shelf created: '${shelfName}'`);
+      const updatedShelfNames = await getShelves();
+      setShelfNames(updatedShelfNames);
     } catch (error) {
       console.log(error);
     }

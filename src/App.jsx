@@ -9,11 +9,29 @@ import SignIn from './views/SignIn/SignIn.jsx';
 import SignUp from './views/SignUp/SignUp.jsx';
 import MyShelves from './views/MyShelves/MyShelves.jsx';
 import SignOut from './views/SignOut/SignOut.jsx';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase.js';
 
 export default function App() {
   const [view, setView] = useState('myBooks');
 
-  const currentPage = view === 'search' ? <Search/> : view === 'myShelves' ? <MyShelves/> : view === 'myBooks' ? <MyBooks/> : view === 'profile' ? <Profile/> : view === 'signIn' ? <SignIn setView={setView}/> : view === 'signUp' ? <SignUp setView={setView}/> : <SignOut setView={setView}/>
+  // const [authenticated, setAuthenticated] = useState(false);
+
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     setAuthenticated(true);
+  //   } else {
+  //     setAuthenticated(false);
+  //   }
+  // })
+
+  const currentPage = view === 'search' ? <Search/> 
+                    : view === 'myShelves' ? <MyShelves/> 
+                    : view === 'myBooks' ? <MyBooks/> 
+                    : view === 'profile' ? <Profile/> 
+                    : view === 'signIn' ? <SignIn setView={setView}/> 
+                    : view === 'signUp' ? <SignUp setView={setView}/> 
+                    : <SignOut setView={setView}/>
 
   return (
     <>
