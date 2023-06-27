@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import styles from './MyBooks.module.css'
+import styles from './shelf.module.css'
 
 export default function SortDropdown({sortOrder, onSelect}) {
     return (

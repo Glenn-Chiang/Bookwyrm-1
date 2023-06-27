@@ -1,8 +1,8 @@
 import { faBarsProgress, faXmarkCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import styles from './MyBooks.module.css'
-import RatingDropdown from "../../components/RatingDropdown/RatingDropdown"
-import InfoButton from "../../components/InfoButton/InfoButton"
+import styles from './shelf.module.css'
+import RatingDropdown from "../RatingDropdown/RatingDropdown"
+import InfoButton from "../InfoButton/InfoButton"
 import updateBook from "../../crudFunctions/updateBook";
 import removeBook from "../../crudFunctions/removeBook";
 import getBooks from "../../crudFunctions/getBooks"

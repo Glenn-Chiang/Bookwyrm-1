@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react"
 import styles from './myBooks.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookReader } from "@fortawesome/free-solid-svg-icons"
-import Shelf from "./Shelf"
+
+import Shelf from "../../components/Shelf/Shelf"
+import ShelvesList from "../../components/ShelvesList/ShelvesList"
+
+import { useEffect, useState } from "react"
 import getBooks from "../../crudFunctions/getBooks"
-import ShelvesList from "../MyShelves/ShelvesList"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../../firebase"
-// import { auth } from "../../firebase"
+
 
 export default function MyBooks() {
   

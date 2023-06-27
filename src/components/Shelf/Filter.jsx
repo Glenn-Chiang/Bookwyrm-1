@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import styles from './MyBooks.module.css'
-import titlecase from '../../utility/titlecase';
+import styles from './shelf.module.css'
+import titlecase from '../../utility/titlecase'
 
 export default function Filter({ onInputChange, onSelect }) {
     const categories = ['all', 'fiction', 'philosophy', 'drama', 'poetry', 'history', 'science'];

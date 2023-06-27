@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import Shelf from "../MyBooks/Shelf";
+import AddShelfModal from "../../components/modals/AddShelfModal/AddShelfModal";
+import Shelf from "../../components/Shelf/Shelf";
+import ShelvesList from "../../components/ShelvesList/ShelvesList";
+
 import getBooks from "../../crudFunctions/getBooks";
 import getShelves from "../../crudFunctions/getShelves";
+
 import styles from './MyShelves.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
-import AddShelfModal from "../../components/modals/AddShelfModal/AddShelfModal";
-import ShelvesList from "./ShelvesList";
 import { auth } from "../../firebase";
 
 export default function MyShelves() {

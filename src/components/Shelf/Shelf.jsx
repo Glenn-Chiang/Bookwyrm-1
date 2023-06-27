@@ -1,16 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import styles from './myBooks.module.css'
-import titlecase from "../../utility/titlecase"
+import titlecase from "../../utility/titlecase";
+
+import styles from './shelf.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBookBookmark, faCalendarDay, faCalendarPlus, faCheckCircle,faImage, faStar, faUser } from "@fortawesome/free-solid-svg-icons"
-import Pagination from "../../components/Pagination/Pagination"
-import InfoModal from "../../components/modals/InfoModal/InfoModal"
-import StatusModal from "../../components/modals/StatusModal/StatusModal"
+
+import Pagination from "../Pagination/Pagination"
+import InfoModal from "../modals/InfoModal/InfoModal"
+import StatusModal from "../modals/StatusModal/StatusModal"
+import ShelvesModal from "../modals/ShelvesModal/ShelvesModal";
 import BookEntry from "./BookEntry";
 import Filter from "./Filter";
 import SortDropdown from "./SortDropdown";
-import ShelvesModal from "../../components/modals/ShelvesModal/ShelvesModal";
 
 export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
   
