@@ -1,11 +1,9 @@
 import titlecase from "../utility/titlecase";
-import { auth } from '../firebase'
 import { db } from '../firebase'
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-export default async function addBook(book) {
+export default async function addBook(user, book) {
   try {
-    const user = auth.currentUser;
     if (!user) {
       console.log('User not authenticated');
     }

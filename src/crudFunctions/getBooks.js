@@ -1,9 +1,8 @@
 import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
 
-export default async function getBooks() {
+export default async function getBooks(user) {
     try {
-        const user = auth.currentUser;
         if (!user) {
             console.log('User not authenticated');
             return [];

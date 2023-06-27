@@ -1,24 +1,27 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Profile.module.css'
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faLineChart, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import getBooks from '../../crudFunctions/getBooks';
-import { auth } from '../../firebase';
+import { AuthContext } from '../../authContext';
 
 export default function Profile() {
-  if (!auth.currentUser) {
-    return (
-      <p>Sign in to view your profile</p>
-    )
-  }
+  const user = useContext(AuthContext);
   
   return (
     <>
-      <h2 className={styles.header}>
-        <FontAwesomeIcon icon={faUser} />
-        Profile
-      </h2>
-      <Stats />
+      {
+        user ? 
+        <>
+          <h2 className={styles.header}>
+            <FontAwesomeIcon icon={faUser} />
+            Profile
+          </h2>
+          <Stats />
+        </>
+
+        : <p>Sign in to view your profile</p>
+      }
     </>
   )
 }
@@ -37,19 +40,20 @@ const calcAverageRating = books => {
 }
 
 function Stats() {
+  const user = useContext(AuthContext);
   const [myBooks, setMyBooks] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const userBooks = await getBooks();
+        const userBooks = await getBooks(user);
         setMyBooks(userBooks)
         console.log('Retrieved books')
       } catch (error) {
         console.log('Error fetching books', error);
       }
     })();
-  }, [])
+  }, [user])
 
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');

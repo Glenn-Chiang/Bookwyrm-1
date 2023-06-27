@@ -1,10 +1,8 @@
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
-export default async function createShelf(shelfName) {
+export default async function createShelf(user, shelfName) {
   try {
-    const user = auth.currentUser;
-
     if (!user) {
       console.log('User not authenticated');
       return;

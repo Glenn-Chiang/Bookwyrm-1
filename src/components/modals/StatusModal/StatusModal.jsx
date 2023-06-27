@@ -3,13 +3,16 @@ import styles from '../AddBookModal/AddBookModal.module.css'
 import modalStyles from '../modal.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsProgress, faBookBookmark, faCalendarPlus, faCheckCircle} from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import CloseButton from '../../CloseButton/CloseButton'
 import updateBook from '../../../crudFunctions/updateBook'
 import titlecase from '../../../utility/titlecase'
 import getBooks from '../../../crudFunctions/getBooks';
+import { AuthContext } from '../../../authContext'
 
 export default function StatusModal({ book, handleClose: closeModal, setBooks }) {
+
+  const user = useContext(AuthContext);
 
   const [selectedStatus, setSelectedStatus] = useState(book.status);
 
@@ -20,10 +23,11 @@ export default function StatusModal({ book, handleClose: closeModal, setBooks })
       return;
     }
     // Update database
-    await updateBook(book.id, {dateAdded: new Date(), status: selectedStatus});
+    await updateBook(user, book.id, {dateAdded: new Date(), status: selectedStatus});
+
     alert(`${book.title} by ${book.authors[0]} has been moved to your '${titlecase(selectedStatus)}' shelf!`)
     // Update local state
-    const updatedBooks = await getBooks();
+    const updatedBooks = await getBooks(user);
     setBooks(updatedBooks);
     closeModal();
   }

@@ -5,12 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import RatingDropdown from '../../RatingDropdown/RatingDropdown';
 import CloseButton from '../../CloseButton/CloseButton';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import titlecase from '../../../utility/titlecase'
 import addBook from '../../../crudFunctions/addBook'
+import { AuthContext } from '../../../authContext';
 
 export default function AddBookModal({book, handleClose: closeModal}) {
+  const user = useContext(AuthContext);
   const [selectedStatus, setSelectedStatus] = useState('read');
   const [rating, setRating] = useState(10);
 
@@ -29,7 +31,7 @@ export default function AddBookModal({book, handleClose: closeModal}) {
     book.shelves = [];
 
     try {
-      await addBook(book);
+      await addBook(user, book);
       alert(`${book.title} by ${book.authors[0]} has been added to your '${titlecase(selectedStatus)}' shelf!`);
     } catch (error) {
       alert(error.message);

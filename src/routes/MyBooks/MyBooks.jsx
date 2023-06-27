@@ -6,45 +6,32 @@ import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "../../components/Shelf/Shelf"
 import ShelvesList from "../../components/ShelvesList/ShelvesList"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import getBooks from "../../crudFunctions/getBooks"
-import { onAuthStateChanged } from "firebase/auth"
-import { auth } from "../../firebase"
+import { AuthContext } from '../../authContext'
 
 
 export default function MyBooks() {
+  const user = useContext(AuthContext);
   
-    const [authenticated, setAuthenticated] = useState(false);
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-    })
-
-    
   // Retrieve user's books when the component mounts
   const [myBooks, setMyBooks] = useState([]);
   useEffect(() => {
     const fetchUserBooks = async () => {
       try {
-        const userBooks = await getBooks();
+        const userBooks = await getBooks(user);
         setMyBooks(userBooks);
       } catch (error) {
         console.log('Error retrieving books: ', error);
       }
     };
     fetchUserBooks();
-  }, [authenticated]);
+  }, [user]);
 
   
   const [displayedShelf, setDisplayedShelf] = useState(null);
   
-  // Not signed in 
-  if (!authenticated) {
-    return (<p>Sign in to view your books</p>)
-  }
+
 
   // Shelf displayed by clicking 'view shelf' button
   if (displayedShelf) {
@@ -63,14 +50,21 @@ export default function MyBooks() {
   }
 
   return (
-    <div className={styles.main}>
-      <h2 className={styles.header}>
-        <FontAwesomeIcon icon={faBookReader}/>
-        My Books
-      </h2>
-      
-      <ShelvesList books={myBooks} shelfNames={['read', 'reading', 'to-read']} setDisplayedShelf={setDisplayedShelf}/>
-    </div>
+    <>
+      { 
+        user ? 
+          <div className={styles.main}>
+            <h2 className={styles.header}>
+              <FontAwesomeIcon icon={faBookReader}/>
+              My Books
+            </h2>
+            
+            <ShelvesList books={myBooks} shelfNames={['read', 'reading', 'to-read']} setDisplayedShelf={setDisplayedShelf}/>
+          </div>
+        
+        : <p>Sign in to view your books</p>
+      }
+    </>
   )
 }
 

@@ -5,11 +5,14 @@ import styles from './AddShelfModal.module.css'
 import CloseButton from '../../CloseButton/CloseButton'
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import createShelf from '../../../crudFunctions/createShelf'
 import getShelves from '../../../crudFunctions/getShelves'
+import { AuthContext } from '../../../authContext'
 
 export default function AddShelfModal({ shelfNames, setShelfNames, closeModal }) {
+  const user = useContext(AuthContext);
+
   const [shelfName, setShelfName] = useState('');
   const validName = !['read', 'reading', 'to-read'].includes(shelfName.toLowerCase());
   const nameInUse = shelfNames.includes(shelfName.toLowerCase());
@@ -22,9 +25,9 @@ export default function AddShelfModal({ shelfNames, setShelfNames, closeModal })
     }
 
     try {
-      createShelf(shelfName);
+      createShelf(user, shelfName);
       alert(`New shelf created: '${shelfName}'`);
-      const updatedShelfNames = await getShelves();
+      const updatedShelfNames = await getShelves(user);
       setShelfNames(updatedShelfNames);
     } catch (error) {
       console.log(error);

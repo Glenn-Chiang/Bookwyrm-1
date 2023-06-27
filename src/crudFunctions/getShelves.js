@@ -1,10 +1,8 @@
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
 
-export default async function getShelves() {
+export default async function getShelves(user) {
     try {
-        const user = auth.currentUser;
-
         if (!user) {
             console.log('User not authenticated')
             return [];

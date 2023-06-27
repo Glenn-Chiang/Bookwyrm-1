@@ -9,52 +9,52 @@
     gap: 10px;
 }
 
-.shelfBooks {
+.shelfTable {
     border: 2px solid white;   
     border-spacing: 0;
     text-align: center;
-    width: 1200px;
+    width: 100%;
     left: 0;
     right: 0;
     margin: 20px auto;
     table-layout: fixed;
 }
 
-.shelfBooks tbody {
+.shelfTable tbody {
     background-color: white;
     color: rgb(0,20,40);
 }
 
-.shelfBooks td {
+.shelfTable td {
     padding: 10px;
 }
 
-.shelfBooks th {
+.shelfTable th {
     padding: 10px;
     
 }
 
-.shelfBooks th.index {
+.shelfTable th.index {
     width: 5%;
 }
 
-.shelfBooks th.cover {
+.shelfTable th.cover {
     width: auto;
 }
 
-.shelfBooks th.title {
+.shelfTable th.title {
     width: 20%;
 }
 
-.shelfBooks th.author {
+.shelfTable th.author {
     width: 20%;
 }
 
-.shelfBooks th.dateAdded {
+.shelfTable th.dateAdded {
     width: 10%;
 }
 
-.shelfBooks th.rating {
+.shelfTable th.rating {
     width: 10%;
 }
 

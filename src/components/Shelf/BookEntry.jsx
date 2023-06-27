@@ -7,9 +7,13 @@ import updateBook from "../../crudFunctions/updateBook";
 import removeBook from "../../crudFunctions/removeBook";
 import getBooks from "../../crudFunctions/getBooks"
 import formatDate from "../../utility/formatDate"
+import { useContext } from "react"
+import { AuthContext } from "../../authContext"
 
 /* eslint-disable react/prop-types */
 export default function BookEntry({ book, index, shelfName, setSelectedBook, setModal, setMyBooks }) {
+  const user = useContext(AuthContext);
+
   const handleInfoClick = book => {
     setSelectedBook(book);
     setModal('info');
@@ -39,7 +43,7 @@ export default function BookEntry({ book, index, shelfName, setSelectedBook, set
 
       {shelfName !== 'reading' && shelfName !== 'to-read' &&
         <td>
-          <RatingDropdown initialRating={book.rating} handleRatingOption={event => updateRating(book.id, event.target.value, setMyBooks)} />
+          <RatingDropdown initialRating={book.rating} handleRatingOption={event => updateRating(user, book.id, event.target.value, setMyBooks)} />
         </td>
       }
       <td>
@@ -72,11 +76,11 @@ const handleRemoveBook = async (bookId, setMyBooks) => {
 }
 
 
-const updateRating = async (bookId, newRating, setMyBooks) => {
+const updateRating = async (user, bookId, newRating, setMyBooks) => {
   try {
-    await updateBook(bookId, {rating: newRating});
+    await updateBook(user, bookId, {rating: newRating});
     // Update local state with updated db data
-    const updatedBooks = await getBooks();
+    const updatedBooks = await getBooks(user);
     setMyBooks(updatedBooks);
   } catch (error) {
     console.log(error);

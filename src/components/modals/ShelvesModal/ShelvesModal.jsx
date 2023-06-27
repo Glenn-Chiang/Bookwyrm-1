@@ -2,21 +2,24 @@
 import styles from './ShelvesModal.module.css'
 import modalStyles from '../modal.module.css'
 import CloseButton from '../../CloseButton/CloseButton'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import getBooks from '../../../crudFunctions/getBooks'
 import getShelves from '../../../crudFunctions/getShelves'
 import updateBook from '../../../crudFunctions/updateBook'
 import titlecase from '../../../utility/titlecase'
+import { AuthContext } from '../../../authContext'
 
 export default function ShelvesModal({ book, handleClose: closeModal, setMyBooks }) {
+  const user = useContext(AuthContext);
+
   const [myShelves, setMyShelves] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const userShelves = await getShelves();
+      const userShelves = await getShelves(user);
       setMyShelves(userShelves);
     })();
-  }, [])
+  }, [user])
 
   const [selectedShelves, setSelectedShelves] = useState(book.shelves || []);
 
@@ -40,8 +43,8 @@ export default function ShelvesModal({ book, handleClose: closeModal, setMyBooks
 
   const handleSubmit = async event => {
     event.preventDefault();
-    await updateBook(book.id, { shelves: selectedShelves })
-    const updatedBooks = await getBooks();
+    await updateBook(user, book.id, { shelves: selectedShelves })
+    const updatedBooks = await getBooks(user);
     setMyBooks(updatedBooks);
     closeModal();
   }

@@ -1,10 +1,8 @@
 import { updateDoc, doc } from "firebase/firestore";
-import { auth, db } from "../firebase"
+import { db } from "../firebase"
 
-export default async function updateBook(bookId, updatedData) {
-    try {
-        const user = auth.currentUser;
-        
+export default async function updateBook(user, bookId, updatedData) {
+    try {        
         if (!user) {
             console.log('User not authenticated');
         }

@@ -118,7 +118,7 @@ export default function Shelf({ shelfName, shelfBooks, setMyBooks }) {
           <SortDropdown sortOrder={sortOrder} onSelect={handleSelectSort}/>
         </div>
   
-        <table className={styles.shelfBooks}>
+        <table className={styles.shelfTable}>
           <thead>
             <tr>
               <th className={styles.index}></th>
