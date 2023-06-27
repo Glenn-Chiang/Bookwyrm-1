@@ -6,12 +6,13 @@ import InfoModal from '../../components/modals/InfoModal/InfoModal'
 import AddBookModal from "../../components/modals/AddBookModal/AddBookModal";
 
 import styles from './Search.module.css'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import fetchResults from "./fetchResults";
 import getBooks from "./getBooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../../authContext";
 
 function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults }) {
   const [searchType, setSearchType] = useState('title');
@@ -23,7 +24,6 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
   const handleInputChange = event => {
     setInputValue(event.target.value);
   };
-  
   
   // Triggered when user clicks search button
   const handleSearch = event => {
@@ -67,7 +67,7 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
       }
     })();
     
-  }, [searchType, sortOrder, searchTerms, startIndex])
+  }, [searchType, sortOrder, searchTerms, startIndex, maxResults])
 
 
   return (
@@ -105,6 +105,9 @@ function SearchForm({ setSearchResults, startIndex, setStartIndex, maxResults })
 
 
 function ResultsList({ results: books, setSelectedInfo, setSelectedAdd }) {
+  
+  const user = useContext(AuthContext);
+
   const resultsItems = books.map((book, idx) => {
     return (
       <li key={idx}>
@@ -124,7 +127,7 @@ function ResultsList({ results: books, setSelectedInfo, setSelectedAdd }) {
 
           <div className={styles.bookBtns}>
             <InfoButton handleClick={() => setSelectedInfo(book)}/>
-            <AddBookButton handleClick={() => setSelectedAdd(book)}/>
+            { user ? <AddBookButton handleClick={() => setSelectedAdd(book)}/> : <span className={styles.signInPrompt}>Sign in to add books</span>}
           </div>
         </div>
       </li>
