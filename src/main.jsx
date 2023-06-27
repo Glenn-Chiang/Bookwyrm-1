@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <MyShelves/>
       },
       {
-        path: 'myBooks',
+        path: '/',
         element: <MyBooks/>
       },
       {

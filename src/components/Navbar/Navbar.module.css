@@ -13,12 +13,20 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    padding: 10px;
     transition: 0.2s;
 }
 
 .navbar li:hover {
     background-color: #2586b6;
+}
+
+.navbar li a {
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .underlined {
