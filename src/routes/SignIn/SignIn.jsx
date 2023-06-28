@@ -9,16 +9,17 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
 
   return (
-    <Form className={styles.form} method='post' onSubmit={event => handleSubmit(event, email, password)}>
+    <Form className={styles.form} method='post' >
       <div>
         <label htmlFor='email'>Email</label>
-        <input type='email' id='email' required onChange={event => setEmail(event.target.value)}/>
+        <input type='email' name='email' id='email' required onChange={event => setEmail(event.target.value)}/>
       </div>
       <div>
         <label htmlFor='password'>Password</label>
-        <input type='password' id='password' required onChange={event => setPassword(event.target.value)}/>
+        <input type='password' name='password' id='password' required onChange={event => setPassword(event.target.value)}/>
       </div>
       <button>Sign In</button>
+
       <p>Don&apos;t have an account? 
         <Link to='/signUp'>Sign Up</Link>
       </p>
@@ -26,18 +27,17 @@ export default function SignIn() {
   )
 }
 
-const handleSubmit = async (event, email, password) => {
-  // event.preventDefault();
-  
+export const action = async ({ request }) => {
+  const data = await request.formData();
+  const email = data.get('email');
+  const password = data.get('password');
+
   try {
     await signIn(email, password);
+    return redirect('/');
   } catch (error) {
-    console.log('Error signing in:', error);
+    console.log('Error signing in', error);
   }
-}
-
-export function action() {
-  return redirect('/');
 }
 
 
