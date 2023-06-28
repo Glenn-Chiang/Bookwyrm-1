@@ -16,6 +16,8 @@ import { action as signOutAction } from './routes/SignOut/SignOut'
 import { loader as MyBooksLoader } from './routes/MyBooks/loader'
 import { loader as MyShelvesLoader } from './routes/MyShelves/loader'
 import { loader as ProfileLoader } from './routes/Profile/loader'
+import { loader as GuestPageLoader } from './routes/guestPage/loader'
+import GuestPage from './routes/guestPage/guestPage'
 
 const router = createBrowserRouter([
   {
@@ -42,19 +44,24 @@ const router = createBrowserRouter([
         loader: ProfileLoader
       },
       {
-        path: 'signIn',
+        path: '/signIn',
         element: <SignIn/>,
         action: signInAction
       },
       {
-        path: 'signUp',
+        path: '/signUp',
         element: <SignUp/>,
         action: signUpAction
       },
       {
-        path: 'signOut',
+        path: '/signOut',
         element: <SignOut/>,
         action: signOutAction
+      },
+      {
+        path: '/guest/:page',
+        element: <GuestPage/>,
+        loader: GuestPageLoader
       }
     ]
   },

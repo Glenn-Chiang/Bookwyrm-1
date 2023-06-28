@@ -27,8 +27,7 @@ export default function Root() {
       <AuthContext.Provider value={user}>
         <Navbar/> 
         <div id='content'>
-          {navigation.state === 'loading' && <p>Loading</p>}
-          <Outlet />
+          {navigation.state === 'loading' ? <p>Loading</p> : <Outlet/>}
         </div>
       </AuthContext.Provider>
     </>

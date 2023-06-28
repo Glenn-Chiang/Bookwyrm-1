@@ -1,8 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
 import { signIn } from '../../auth/authFunctions'
 import styles from './SignIn.module.css'
 import { Form, Link, redirect } from 'react-router-dom';
+import { auth } from '../../firebase';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -20,7 +22,7 @@ export default function SignIn() {
       </div>
       <button>Sign In</button>
 
-      <p>Don&apos;t have an account? 
+      <p>Don't have an account? 
         <Link to='/signUp'>Sign Up</Link>
       </p>
     </Form>
@@ -34,7 +36,8 @@ export const action = async ({ request }) => {
 
   try {
     await signIn(email, password);
-    return redirect('/');
+    const user = auth.currentUser;
+    return redirect(`/${user.uid}`);
   } catch (error) {
     console.log('Error signing in', error);
   }
