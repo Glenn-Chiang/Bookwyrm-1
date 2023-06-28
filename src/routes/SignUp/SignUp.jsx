@@ -2,13 +2,14 @@
 import { useState } from 'react'
 import { signUp } from '../../auth/authFunctions'
 import styles from './SignUp.module.css'
+import { Form, Link, redirect } from 'react-router-dom';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return (
-    <form className={styles.form} onSubmit={event => handleSubmit(event, email, password)}>
+    <Form className={styles.form} onSubmit={event => handleSubmit(event, email, password)}>
       <div>
         <label htmlFor='email'>Email</label>
         <input type='email' id='email' required onChange={event => setEmail(event.target.value)}/>
@@ -19,9 +20,9 @@ export default function SignUp() {
       </div>
       <button>Sign Up</button>
       <p>Already have an account? 
-        <button>Sign In</button>
+        <Link to='/signIn'>Sign In</Link>
       </p>
-    </form>
+    </Form>
   )
 }
 
@@ -31,8 +32,12 @@ const handleSubmit = async (event, email, password) => {
     await signUp(email, password);
     console.log('Signed up');
     alert('Signed up successfully!');
-    
+
   } catch (error) {
     console.log('Error signing up: ' + error);
   }
+}
+
+export function action() {
+  return redirect('/signIn');
 }

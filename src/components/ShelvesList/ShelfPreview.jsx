@@ -21,6 +21,7 @@ export default function ShelfPreview({ shelfName, books, setDisplayedShelf }) {
       <button onClick={() => setDisplayedShelf(shelfName)}>
         View shelf
       </button>
+      
     </div>
   )
 }

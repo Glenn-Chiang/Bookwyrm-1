@@ -5,12 +5,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Root from './Root.jsx'
 import Search from './routes/Search/Search'
 import MyShelves from './routes/MyShelves/MyShelves'
-import MyBooks from './routes/MyBooks/myBooks'
+import MyBooks from './routes/MyBooks/MyBooks'
 import Profile from './routes/Profile/Profile'
 import SignIn from './routes/SignIn/SignIn'
 import SignUp from './routes/SignUp/SignUp'
 import SignOut from './routes/SignOut/SignOut'
-
+import { action as signInAction } from './routes/SignIn/SignIn'
+import { action as signUpAction } from './routes/SignUp/SignUp'
+import { action as signOutAction } from './routes/SignOut/SignOut'
 
 const router = createBrowserRouter([
   {
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: <MyBooks/>
+        element: <MyBooks/>,
       },
       {
         path: 'profile',
@@ -35,15 +37,18 @@ const router = createBrowserRouter([
       },
       {
         path: 'signIn',
-        element: <SignIn/>
+        element: <SignIn/>,
+        action: signInAction
       },
       {
         path: 'signUp',
-        element: <SignUp/>
+        element: <SignUp/>,
+        action: signUpAction
       },
       {
         path: 'signOut',
-        element: <SignOut/>
+        element: <SignOut/>,
+        action: signOutAction
       }
     ]
   },

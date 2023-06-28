@@ -2,13 +2,14 @@
 import { useState } from 'react'
 import { signIn } from '../../auth/authFunctions'
 import styles from './SignIn.module.css'
+import { Form, Link, redirect } from 'react-router-dom';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return (
-    <form className={styles.form} onSubmit={event => handleSubmit(event, email, password)}>
+    <Form className={styles.form} method='post' onSubmit={event => handleSubmit(event, email, password)}>
       <div>
         <label htmlFor='email'>Email</label>
         <input type='email' id='email' required onChange={event => setEmail(event.target.value)}/>
@@ -19,19 +20,24 @@ export default function SignIn() {
       </div>
       <button>Sign In</button>
       <p>Don&apos;t have an account? 
-        <button>Sign Up</button>
+        <Link to='/signUp'>Sign Up</Link>
       </p>
-    </form>
+    </Form>
   )
 }
 
 const handleSubmit = async (event, email, password) => {
-  event.preventDefault();
+  // event.preventDefault();
+  
   try {
     await signIn(email, password);
-
   } catch (error) {
     console.log('Error signing in:', error);
   }
 }
+
+export function action() {
+  return redirect('/');
+}
+
 

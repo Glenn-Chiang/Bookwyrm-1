@@ -29,6 +29,6 @@
     box-sizing: border-box;
 }
 
-.underlined {
+.active {
     border-bottom: 2px solid white;
 }

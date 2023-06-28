@@ -21,12 +21,12 @@ export default function Root() {
   return (
     <>
       <Banner/>
-      <Navbar/>
-      <div id='content'>
-        <AuthContext.Provider value={user}>
+      <AuthContext.Provider value={user}>
+        <Navbar/> 
+        <div id='content'>
           <Outlet />
-        </AuthContext.Provider>
-      </div>
+        </div>
+      </AuthContext.Provider>
     </>
   )
 }

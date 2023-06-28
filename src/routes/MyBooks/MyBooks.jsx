@@ -32,7 +32,6 @@ export default function MyBooks() {
   const [displayedShelf, setDisplayedShelf] = useState(null);
   
 
-
   // Shelf displayed by clicking 'view shelf' button
   if (displayedShelf) {
     const shelfBooks = myBooks.filter(book => book.status === displayedShelf);

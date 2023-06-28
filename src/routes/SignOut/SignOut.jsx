@@ -1,29 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
 import styles from './SignOut.module.css'
 import { signOutUser } from "../../auth/authFunctions";
+import { Form, redirect } from "react-router-dom";
 
 export default function SignOut() {
-  const [signedIn, setSignedIn] = useState(true);
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    signOutUser();
-    setSignedIn(false);
-  }
-
-  if (!signedIn) {
-    return (
-      <p>You have signed out of your account</p>
-    )
-  }
-
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <Form method='post' className={styles.form}>
       Hope to see you soon!
       <button>
         Sign Out
       </button>
-    </form>
+    </Form>
   )
+}
+
+export async function action() {
+  await signOutUser();
+  return redirect('/signIn');
 }
