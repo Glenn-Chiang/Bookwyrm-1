@@ -27,7 +27,7 @@ export default function SignUp() {
 }
 
 
-export const action = async ({ request }) {
+export const action = async ({ request }) => {
   try {
     const data = await request.formData();
     const email = data.get('email');
