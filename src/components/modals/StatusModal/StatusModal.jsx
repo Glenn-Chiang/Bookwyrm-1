@@ -27,7 +27,7 @@ export default function StatusModal({ book, handleClose: closeModal, setBooks })
 
     alert(`${book.title} by ${book.authors[0]} has been moved to your '${titlecase(selectedStatus)}' shelf!`)
     // Update local state
-    const updatedBooks = await getBooks(user);
+    const updatedBooks = await getBooks(user.uid);
     setBooks(updatedBooks);
     closeModal();
   }

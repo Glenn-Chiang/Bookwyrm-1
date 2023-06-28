@@ -1,10 +1,11 @@
 // import styles from './App.module.css';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
 import Banner from './components/Banner/Banner.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
 import { useEffect, useState } from 'react';
 import { auth } from './firebase.js';
 import { AuthContext } from './authContext.js';
+
 
 export default function Root() {
   const [user, setUser] = useState(null);
@@ -17,6 +18,8 @@ export default function Root() {
     return () => unsubscribe();
   }, []);
 
+  // Loading 
+  const navigation = useNavigation();
 
   return (
     <>
@@ -24,6 +27,7 @@ export default function Root() {
       <AuthContext.Provider value={user}>
         <Navbar/> 
         <div id='content'>
+          {navigation.state === 'loading' && <p>Loading</p>}
           <Outlet />
         </div>
       </AuthContext.Provider>

@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './Profile.module.css'
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faLineChart, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useContext, useEffect, useState } from 'react';
-import getBooks from '../../crudFunctions/getBooks';
+import { useContext } from 'react';
 import { AuthContext } from '../../authContext';
+import { useLoaderData } from 'react-router-dom';
 
 export default function Profile() {
   const user = useContext(AuthContext);
@@ -40,21 +40,7 @@ const calcAverageRating = books => {
 }
 
 function Stats() {
-  const user = useContext(AuthContext);
-  const [myBooks, setMyBooks] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const userBooks = await getBooks(user);
-        setMyBooks(userBooks)
-        console.log('Retrieved books')
-      } catch (error) {
-        console.log('Error fetching books', error);
-      }
-    })();
-  }, [user])
-
+  const myBooks = useLoaderData();
   const booksRead = myBooks.filter(book => book.status === 'read');
   const booksReading = myBooks.filter(book => book.status === 'reading');
   const booksToRead = myBooks.filter(book => book.status === 'to-read');

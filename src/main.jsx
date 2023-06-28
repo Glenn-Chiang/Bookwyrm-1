@@ -13,6 +13,9 @@ import SignOut from './routes/SignOut/SignOut'
 import { action as signInAction } from './routes/SignIn/SignIn'
 import { action as signUpAction } from './routes/SignUp/SignUp'
 import { action as signOutAction } from './routes/SignOut/SignOut'
+import { loader as MyBooksLoader } from './routes/MyBooks/loader'
+import { loader as MyShelvesLoader } from './routes/MyShelves/loader'
+import { loader as ProfileLoader } from './routes/Profile/loader'
 
 const router = createBrowserRouter([
   {
@@ -24,16 +27,19 @@ const router = createBrowserRouter([
         element: <Search/>
       },
       {
-        path: 'myShelves',
-        element: <MyShelves/>
+        path: '/myShelves/:userId',
+        element: <MyShelves/>,
+        loader: MyShelvesLoader
       },
       {
-        path: '/',
+        path: '/:userId',
         element: <MyBooks/>,
+        loader: MyBooksLoader
       },
       {
-        path: 'profile',
-        element: <Profile/>
+        path: '/profile/:userId',
+        element: <Profile/>,
+        loader: ProfileLoader
       },
       {
         path: 'signIn',

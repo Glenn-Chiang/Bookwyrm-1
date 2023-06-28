@@ -16,7 +16,7 @@ export default function ShelvesModal({ book, handleClose: closeModal, setMyBooks
 
   useEffect(() => {
     (async () => {
-      const userShelves = await getShelves(user);
+      const userShelves = await getShelves(user.uid);
       setMyShelves(userShelves);
     })();
   }, [user])
@@ -44,7 +44,7 @@ export default function ShelvesModal({ book, handleClose: closeModal, setMyBooks
   const handleSubmit = async event => {
     event.preventDefault();
     await updateBook(user, book.id, { shelves: selectedShelves })
-    const updatedBooks = await getBooks(user);
+    const updatedBooks = await getBooks(user.uid);
     setMyBooks(updatedBooks);
     closeModal();
   }

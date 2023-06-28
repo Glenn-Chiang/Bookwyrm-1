@@ -1,14 +1,14 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-export default async function getBooks(user) {
+export default async function getBooks(userId) {
     try {
-        if (!user) {
+        if (!userId) {
             console.log('User not authenticated');
             return [];
         }
 
-        const querySnapshot = await getDocs(collection(db, 'users', user.uid, 'books'));
+        const querySnapshot = await getDocs(collection(db, 'users', userId, 'books'));
         let userBooks = [];
         querySnapshot.forEach(bookDoc => userBooks.push(bookDoc.data()));
         console.log('Retrieved user books');

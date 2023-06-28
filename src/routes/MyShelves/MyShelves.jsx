@@ -1,39 +1,19 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AddShelfModal from "../../components/modals/AddShelfModal/AddShelfModal";
 import Shelf from "../../components/Shelf/Shelf";
 import ShelvesList from "../../components/ShelvesList/ShelvesList";
-
-import getBooks from "../../crudFunctions/getBooks";
-import getShelves from "../../crudFunctions/getShelves";
 
 import styles from './MyShelves.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../authContext";
+import { useLoaderData } from "react-router-dom";
+
 
 export default function MyShelves() {
   const user = useContext(AuthContext);
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const userBooks = await getBooks(user);
-      const readBooks = userBooks.filter(book => book.status === 'read');
-      setBooks(readBooks);
-    })();
-  }, [user])
-
-  const [shelfNames, setShelfNames] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const userShelves = await getShelves(user);
-      if (userShelves) {
-        setShelfNames(userShelves);
-      }
-    })();
-  }, [user])
-
+  const [books, setBooks] = useState(useLoaderData().userBooks);
+  const [shelfNames, setShelfNames] = useState(useLoaderData().userShelves);
 
   // Which shelf to display on the page. When user clicks 'view shelf' button, that shelf will be displayed
   const [displayedShelf, setDisplayedShelf] = useState(null);

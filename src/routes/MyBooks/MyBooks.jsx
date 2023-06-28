@@ -6,28 +6,17 @@ import { faBookReader } from "@fortawesome/free-solid-svg-icons"
 import Shelf from "../../components/Shelf/Shelf"
 import ShelvesList from "../../components/ShelvesList/ShelvesList"
 
-import { useContext, useEffect, useState } from "react"
-import getBooks from "../../crudFunctions/getBooks"
+import { useContext, useState } from "react"
 import { AuthContext } from '../../authContext'
+import { useLoaderData } from 'react-router-dom'
+
 
 
 export default function MyBooks() {
   const user = useContext(AuthContext);
   
   // Retrieve user's books when the component mounts
-  const [myBooks, setMyBooks] = useState([]);
-  useEffect(() => {
-    const fetchUserBooks = async () => {
-      try {
-        const userBooks = await getBooks(user);
-        setMyBooks(userBooks);
-      } catch (error) {
-        console.log('Error retrieving books: ', error);
-      }
-    };
-    fetchUserBooks();
-  }, [user]);
-
+  const [myBooks, setMyBooks] = useState(useLoaderData());
   
   const [displayedShelf, setDisplayedShelf] = useState(null);
   

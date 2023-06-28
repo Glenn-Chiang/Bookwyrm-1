@@ -53,22 +53,22 @@ export default function BookEntry({ book, index, shelfName, setSelectedBook, set
           { shelfName !== 'reading' && shelfName !== 'to-read' && 
             <ShelvesButton handleClick={() => handleShelfClick(book)}/> 
           }
-          <RemoveButton handleClick={() => handleRemoveBook(book.id, setMyBooks)} />
+          <RemoveButton handleClick={() => handleRemoveBook(user, book.id, setMyBooks)} />
         </div>
       </td>
     </tr>
   )
 }
 
-const handleRemoveBook = async (bookId, setMyBooks) => {
+const handleRemoveBook = async (user, bookId, setMyBooks) => {
   const userResponse = confirm('This book will be deleted from all your shelves. Are you sure you want to proceed?');
   if (!userResponse) {
     return;
   }
   try {
-    await removeBook(bookId); // Remove book from db
+    await removeBook(user, bookId); // Remove book from db
     // Update local state with updated db data
-    const updatedBooks = await getBooks();
+    const updatedBooks = await getBooks(user.uid);
     setMyBooks(updatedBooks);
   } catch (error) {
     console.log(error);
@@ -80,7 +80,7 @@ const updateRating = async (user, bookId, newRating, setMyBooks) => {
   try {
     await updateBook(user, bookId, {rating: newRating});
     // Update local state with updated db data
-    const updatedBooks = await getBooks(user);
+    const updatedBooks = await getBooks(user.uid);
     setMyBooks(updatedBooks);
   } catch (error) {
     console.log(error);

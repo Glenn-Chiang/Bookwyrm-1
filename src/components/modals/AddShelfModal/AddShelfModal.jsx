@@ -27,7 +27,7 @@ export default function AddShelfModal({ shelfNames, setShelfNames, closeModal })
     try {
       createShelf(user, shelfName);
       alert(`New shelf created: '${shelfName}'`);
-      const updatedShelfNames = await getShelves(user);
+      const updatedShelfNames = await getShelves(user.uid);
       setShelfNames(updatedShelfNames);
     } catch (error) {
       console.log(error);
