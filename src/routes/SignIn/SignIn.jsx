@@ -37,7 +37,7 @@ export const action = async ({ request }) => {
   try {
     await signIn(email, password);
     const user = auth.currentUser;
-    return redirect(`/${user.uid}`);
+    return redirect(`/myBooks/${user.uid}`);
   } catch (error) {
     console.log('Error signing in', error);
   }

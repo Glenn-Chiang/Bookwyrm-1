@@ -15,17 +15,17 @@ export default function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to={user ? `/MyShelves/${user.uid}` : '/guest/shelves'} className={({ isActive }) => isActive ? styles.active : '' }>
+          <NavLink to={user ? `/myShelves/${user.uid}` : '/'} className={({ isActive }) => isActive ? styles.active : '' }>
             My Shelves
           </NavLink>
         </li>
         <li>
-          <NavLink to={user ? `/${user.uid}` : '/guest/books'} className={({ isActive }) => isActive ? styles.active : '' }>
+          <NavLink to={user ? `/myBooks/${user.uid}` : '/'} className={({ isActive }) => isActive ? styles.active : '' }>
             My Books
           </NavLink>
         </li>
         <li>
-          <NavLink to={user ? `/profile/${user.uid}` : '/guest/profile'} className={({ isActive }) => isActive ? styles.active : '' }>
+          <NavLink to={user ? `/profile/${user.uid}` : '/'} className={({ isActive }) => isActive ? styles.active : '' }>
             Profile
           </NavLink>
         </li>

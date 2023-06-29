@@ -3,25 +3,23 @@ import styles from './Profile.module.css'
 import { faBookBookmark, faCalendarPlus, faCheckCircle, faLineChart, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
 import { AuthContext } from '../../authContext';
-import { useLoaderData } from 'react-router-dom';
+import { Navigate, useLoaderData, useParams } from 'react-router-dom';
 
 export default function Profile() {
+  // If current user enters another user's id into url
   const user = useContext(AuthContext);
-  
+  const userIdParam = useParams().userId;
+  if (user.uid !== userIdParam) {
+    return <Navigate to={`/profile/${user.uid}`} />;
+  }
+
   return (
     <>
-      {
-        user ? 
-        <>
-          <h2 className={styles.header}>
-            <FontAwesomeIcon icon={faUser} />
-            Profile
-          </h2>
-          <Stats />
-        </>
-
-        : <p>Sign in to view your profile</p>
-      }
+      <h2 className={styles.header}>
+        <FontAwesomeIcon icon={faUser} />
+        Profile
+      </h2>
+      <Stats />
     </>
   )
 }

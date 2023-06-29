@@ -8,15 +8,20 @@ import { AuthContext } from './authContext.js';
 
 
 export default function Root() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      setUser(user);
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
     });
 
     return () => unsubscribe();
   }, []);
+
 
   // Loading 
   const navigation = useNavigation();

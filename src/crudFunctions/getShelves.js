@@ -3,11 +3,6 @@ import { db } from "../firebase";
 
 export default async function getShelves(userId) {
     try {
-        if (!userId) {
-            console.log('User not authenticated')
-            return [];
-        } 
-
         const userDoc = await getDoc(doc(db, 'users', userId));
         const userShelves = userDoc.data().shelves;
         return userShelves;    

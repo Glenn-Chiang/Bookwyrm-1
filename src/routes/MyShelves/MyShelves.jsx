@@ -7,17 +7,22 @@ import styles from './MyShelves.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../authContext";
-import { useLoaderData } from "react-router-dom";
+import { Navigate, useLoaderData, useParams } from "react-router-dom";
 
 
 export default function MyShelves() {
+  // If current user enters another user's id into url
   const user = useContext(AuthContext);
-  const [books, setBooks] = useState(useLoaderData().userBooks);
-  const [shelfNames, setShelfNames] = useState(useLoaderData().userShelves);
-
+  const userIdParam = useParams().userId;
+  
+  // Load data
+  const loaderData = useLoaderData();
+  const [books, setBooks] = useState(loaderData.userBooks);
+  const [shelfNames, setShelfNames] = useState(loaderData.userShelves);
+  
   // Which shelf to display on the page. When user clicks 'view shelf' button, that shelf will be displayed
   const [displayedShelf, setDisplayedShelf] = useState(null);
-
+  
   // Hide or show AddShelf modal
   const [showAddShelf, setShowAddShelf] = useState(false);
   
@@ -35,34 +40,31 @@ export default function MyShelves() {
       </>
     );
   }
+  
+  if (user.uid !== userIdParam) {
+    return <Navigate to={`/myShelves/${user.uid}`} />
+  }
 
   return (
-    <>
-    {
-      user ? 
-      <div>
-        <div className={styles.header}>
-          <h2>
-            My Shelves
-          </h2>
+    <div>
+      <div className={styles.header}>
+        <h2>
+          My Shelves
+        </h2>
 
-          <p>
-            Create custom shelves to organise books that you have read
-          </p>
+        <p>
+          Create custom shelves to organise books that you have read
+        </p>
 
-          <div className={styles.addShelf}>
-            <button className={styles.addShelfBtn} onClick={() => setShowAddShelf(true)}>
-              Add a Shelf
-              <FontAwesomeIcon icon={faPlusSquare}/>
-            </button>
-          </div>
+        <div className={styles.addShelf}>
+          <button className={styles.addShelfBtn} onClick={() => setShowAddShelf(true)}>
+            Add a Shelf
+            <FontAwesomeIcon icon={faPlusSquare}/>
+          </button>
         </div>
-        { showAddShelf && <AddShelfModal shelfNames={shelfNames} setShelfNames={setShelfNames} closeModal={() => setShowAddShelf(false)}/>}
-        { shelfNames && <ShelvesList books={books} shelfNames={shelfNames} setDisplayedShelf={setDisplayedShelf}/> }
-      </div> 
-
-      : <p>Sign in to view your shelves</p>
-    }
-    </>
+      </div>
+      { showAddShelf && <AddShelfModal shelfNames={shelfNames} setShelfNames={setShelfNames} closeModal={() => setShowAddShelf(false)}/>}
+      { shelfNames && <ShelvesList books={books} shelfNames={shelfNames} setDisplayedShelf={setDisplayedShelf}/> }
+    </div> 
   )
 }
